@@ -18,7 +18,7 @@ export function getYouTubeEmbedUrl(url: string) {
     }
 
     return videoId
-      ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}`
+      ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=0&rel=0`
       : null;
   } catch {
     return null;

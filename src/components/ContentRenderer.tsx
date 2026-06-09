@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { CalendarDay } from "@/data/days";
 import { getYouTubeEmbedUrl } from "@/data/contentUrls";
 import { CouponCard } from "./CouponCard";
@@ -18,7 +18,24 @@ function MissingContent() {
 
 export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; contentUrl?: string }) {
   const [hasError, setHasError] = useState(false);
+  const fullscreenRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const source = contentUrl?.trim() || item.file;
+
+  useLayoutEffect(() => {
+    if (item.type !== "video") return;
+
+    void videoRef.current?.play().catch(() => {
+      // Some browsers still block autoplay even after the user opened the day.
+    });
+
+    const fullscreenElement = fullscreenRef.current;
+    if (fullscreenElement && !document.fullscreenElement) {
+      void fullscreenElement.requestFullscreen().catch(() => {
+        // Fullscreen requires user activation and may be disabled by the browser.
+      });
+    }
+  }, [item.type, source]);
 
   if (item.type === "coupon") return <CouponCard text={item.text ?? ""} />;
 
@@ -53,7 +70,7 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
 
   if (youtubeEmbedUrl) {
     return (
-      <div className="aspect-video w-full overflow-hidden rounded-[1.75rem] bg-[#3d292d] shadow-lg">
+      <div ref={fullscreenRef} className="h-full w-full overflow-hidden bg-black">
         <iframe
           src={youtubeEmbedUrl}
           title={item.title}
@@ -65,5 +82,16 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
     );
   }
 
-  return <video controls playsInline src={source} onError={() => setHasError(true)} className="max-h-[65vh] w-full rounded-[1.75rem] bg-[#3d292d] object-contain shadow-lg" />;
+  return (
+    <div ref={fullscreenRef} className="flex h-full w-full items-center justify-center overflow-hidden bg-black">
+      <video
+        ref={videoRef}
+        autoPlay
+        controls
+        src={source}
+        onError={() => setHasError(true)}
+        className="h-full w-full object-contain"
+      />
+    </div>
+  );
 }
