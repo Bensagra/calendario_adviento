@@ -90,8 +90,14 @@ npm run start   # servir el build
 1. Subí este proyecto a un repositorio de GitHub, GitLab o Bitbucket.
 2. Entrá a [vercel.com/new](https://vercel.com/new).
 3. Importá el repositorio.
-4. Vercel detecta Next.js automáticamente; no hace falta configurar variables de entorno.
-5. Hacé deploy.
+4. En la configuración del proyecto verificá:
+   - Framework Preset: `Next.js`.
+   - Root Directory: `.` (la raíz del repositorio).
+   - Build Command y Output Directory: dejalos con los valores predeterminados.
+   - Production Branch: `main`.
+5. Hacé deploy y abrí la URL generada desde su raíz, por ejemplo `https://tu-proyecto.vercel.app/`.
+
+La aplicación también dirige cualquier subruta inexistente hacia el calendario principal sin interferir con los archivos de `public/`.
 
 También podés instalar Vercel CLI y ejecutar:
 
