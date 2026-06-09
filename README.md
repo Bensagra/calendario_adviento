@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Calendario de adviento romántico
 
-## Getting Started
+Una web mobile-first con 20 sorpresas que se desbloquean por fecha. Está hecha con Next.js, TypeScript, App Router y Tailwind CSS, sin backend ni base de datos.
 
-First, run the development server:
+## Empezar
+
+Necesitás Node.js 20.9 o superior.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrí [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Personalizar fechas y modo de prueba
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Editá `src/data/config.ts`:
 
-## Learn More
+```ts
+export const TEST_MODE = true;
+export const REUNION_DATE = "2026-06-30";
+```
 
-To learn more about Next.js, take a look at the following resources:
+- `TEST_MODE = true`: todos los días se pueden abrir.
+- `TEST_MODE = false`: cada sorpresa respeta su `unlockDate`.
+- `REUNION_DATE`: fecha usada por el contador superior.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Antes de compartir la web, acordate de pasar `TEST_MODE` a `false`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Cambiar días, textos y tipos
 
-## Deploy on Vercel
+Toda la configuración está en `src/data/days.ts`. Cada día acepta:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `video`: requiere un archivo `.mp4`.
+- `image`: requiere un archivo `.jpg`.
+- `audio`: requiere un archivo `.mp3`.
+- `text`: usa el campo `text` y no necesita archivo.
+- `coupon`: usa el campo `text` y no necesita archivo.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Podés cambiar títulos, subtítulos, textos, tipos, rutas y fechas directamente en ese archivo.
+
+## Agregar URLs de YouTube e imágenes hosteadas
+
+Editá `public/content/urls.json`. El archivo tiene una entrada para cada día:
+
+```json
+{
+  "1": "https://www.youtube.com/watch?v=ID_DEL_VIDEO",
+  "4": "https://mis-imagenes.com/dia-4.jpg",
+  "6": "https://youtu.be/ID_DEL_VIDEO"
+}
+```
+
+- Para videos acepta URLs normales de YouTube, `youtu.be`, Shorts, Live o Embed.
+- Para imágenes usá la URL pública directa de la imagen.
+- Dejando el valor como `""`, la web intenta usar el archivo local configurado en `src/data/days.ts`.
+- Las URLs del JSON tienen prioridad sobre los archivos locales.
+
+Los días de texto y cupón no necesitan URL.
+
+## Usar archivos locales
+
+Guardá los archivos dentro de `public/content/` usando el nombre configurado en `src/data/days.ts`.
+
+Ejemplos:
+
+```text
+public/content/1.mp4
+public/content/3.mp3
+public/content/4.jpg
+public/content/6.mp4
+```
+
+Si un archivo todavía no existe, la sorpresa muestra un mensaje amigable y la app sigue funcionando.
+
+También podés usar una URL externa directa para un audio o un archivo MP4.
+
+## Scripts
+
+```bash
+npm run dev     # desarrollo local
+npm run lint    # análisis de código
+npm run build   # build de producción
+npm run start   # servir el build
+```
+
+## Deploy en Vercel
+
+1. Subí este proyecto a un repositorio de GitHub, GitLab o Bitbucket.
+2. Entrá a [vercel.com/new](https://vercel.com/new).
+3. Importá el repositorio.
+4. Vercel detecta Next.js automáticamente; no hace falta configurar variables de entorno.
+5. Hacé deploy.
+
+También podés instalar Vercel CLI y ejecutar:
+
+```bash
+npx vercel
+```
+
+Los días vistos se guardan en `localStorage` del navegador de cada persona.
