@@ -16,6 +16,19 @@ function MissingContent() {
   );
 }
 
+function AuxiliaryText({ text, floating = false }: { text?: string; floating?: boolean }) {
+  if (!text) return null;
+
+  return (
+    <p className={floating
+      ? "pointer-events-none absolute inset-x-4 bottom-5 rounded-2xl bg-black/52 px-4 py-3 text-center text-sm font-semibold leading-6 text-white backdrop-blur-md sm:inset-x-8"
+      : "mt-4 rounded-2xl bg-[#fff5ef] px-5 py-4 text-center text-sm font-semibold leading-6 text-[#76585c]"
+    }>
+      {text}
+    </p>
+  );
+}
+
 export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; contentUrl?: string }) {
   const [hasError, setHasError] = useState(false);
   const fullscreenRef = useRef<HTMLDivElement>(null);
@@ -51,9 +64,14 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (!source || hasError) return <MissingContent />;
 
   if (item.type === "image") {
-    // Native img lets us gracefully catch missing user-provided files.
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={source} alt={item.title} onError={() => setHasError(true)} className="max-h-[65vh] w-full rounded-[1.75rem] object-contain shadow-lg" />;
+    return (
+      <div>
+        {/* Native img lets us gracefully catch missing user-provided files. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={source} alt={item.title} onError={() => setHasError(true)} className="max-h-[65vh] w-full rounded-[1.75rem] object-contain shadow-lg" />
+        <AuxiliaryText text={item.text} />
+      </div>
+    );
   }
 
   if (item.type === "audio") {
@@ -62,6 +80,7 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
         <HeartIcon className="mx-auto h-8 w-8 text-[#cc5c64]" />
         <p className="mt-4 text-sm font-semibold text-[#68484c]">Escuchalo cuando tengas un ratito para vos</p>
         <audio controls src={source} onError={() => setHasError(true)} className="mt-6 w-full" />
+        <AuxiliaryText text={item.text} />
       </div>
     );
   }
@@ -70,7 +89,7 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
 
   if (youtubeEmbedUrl) {
     return (
-      <div ref={fullscreenRef} className="h-full w-full overflow-hidden bg-black">
+      <div ref={fullscreenRef} className="relative h-full w-full overflow-hidden bg-black">
         <iframe
           src={youtubeEmbedUrl}
           title={item.title}
@@ -78,12 +97,13 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
           allowFullScreen
           className="h-full w-full border-0"
         />
+        <AuxiliaryText text={item.text} floating />
       </div>
     );
   }
 
   return (
-    <div ref={fullscreenRef} className="flex h-full w-full items-center justify-center overflow-hidden bg-black">
+    <div ref={fullscreenRef} className="relative flex h-full w-full items-center justify-center overflow-hidden bg-black">
       <video
         ref={videoRef}
         autoPlay
@@ -92,6 +112,7 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
         onError={() => setHasError(true)}
         className="h-full w-full object-contain"
       />
+      <AuxiliaryText text={item.text} floating />
     </div>
   );
 }

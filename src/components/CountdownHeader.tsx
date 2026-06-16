@@ -1,11 +1,17 @@
-import { REUNION_DATE } from "@/data/config";
+import { CALENDAR_START_DATE, REUNION_DATE } from "@/data/config";
 import { HeartIcon } from "./icons";
+
+function getLocalMidnight(dateKey: string) {
+  return new Date(`${dateKey}T00:00:00`);
+}
 
 function getDaysLeft() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const reunion = new Date(`${REUNION_DATE}T00:00:00`);
-  return Math.max(0, Math.ceil((reunion.getTime() - today.getTime()) / 86_400_000));
+  const start = getLocalMidnight(CALENDAR_START_DATE);
+  const reunion = getLocalMidnight(REUNION_DATE);
+  const countingDay = today < start ? start : today;
+  return Math.max(0, Math.ceil((reunion.getTime() - countingDay.getTime()) / 86_400_000));
 }
 
 export function CountdownHeader() {

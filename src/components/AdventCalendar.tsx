@@ -10,6 +10,11 @@ import { DayModal } from "./DayModal";
 import { HeartIcon } from "./icons";
 
 const STORAGE_KEY = "advent-calendar-viewed-days";
+const COMPLETED_GAMES_KEY = "completedUnlockGames";
+const GAME_CHOICES_KEY = "unlockGameChoices";
+
+type CompletedUnlockGames = Record<string, boolean>;
+type UnlockGameChoices = Record<string, string>;
 
 function getLocalDateKey() {
   const now = new Date();
@@ -22,6 +27,8 @@ function getLocalDateKey() {
 export function AdventCalendar() {
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null);
   const [viewedDays, setViewedDays] = useState<number[]>([]);
+  const [completedUnlockGames, setCompletedUnlockGames] = useState<CompletedUnlockGames>({});
+  const [, setUnlockGameChoices] = useState<UnlockGameChoices>({});
   const [contentUrls, setContentUrls] = useState<ContentUrls>({});
   const [toast, setToast] = useState(false);
 
@@ -29,8 +36,12 @@ export function AdventCalendar() {
     const timeout = window.setTimeout(() => {
       try {
         setViewedDays(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]"));
+        setCompletedUnlockGames(JSON.parse(localStorage.getItem(COMPLETED_GAMES_KEY) ?? "{}"));
+        setUnlockGameChoices(JSON.parse(localStorage.getItem(GAME_CHOICES_KEY) ?? "{}"));
       } catch {
         setViewedDays([]);
+        setCompletedUnlockGames({});
+        setUnlockGameChoices({});
       }
     }, 0);
     return () => window.clearTimeout(timeout);
@@ -44,6 +55,19 @@ export function AdventCalendar() {
   }, []);
 
   const isUnlocked = (item: CalendarDay) => TEST_MODE || getLocalDateKey() >= item.unlockDate;
+  const hasPendingGame = (item: CalendarDay) => {
+    const unlockGame = item.unlockGame;
+    return Boolean(unlockGame && unlockGame.type !== "none" && !completedUnlockGames[String(item.day)]);
+  };
+
+  const markDayViewed = (day: number) => {
+    setViewedDays((current) => {
+      if (current.includes(day)) return current;
+      const next = [...current, day];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
 
   const selectDay = (item: CalendarDay) => {
     if (!isUnlocked(item)) {
@@ -53,12 +77,25 @@ export function AdventCalendar() {
     }
 
     setSelectedDay(item);
-    setViewedDays((current) => {
-      if (current.includes(item.day)) return current;
-      const next = [...current, item.day];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    if (!hasPendingGame(item)) markDayViewed(item.day);
+  };
+
+  const completeUnlockGame = (item: CalendarDay, answer?: string) => {
+    setCompletedUnlockGames((current) => {
+      const next = { ...current, [String(item.day)]: true };
+      localStorage.setItem(COMPLETED_GAMES_KEY, JSON.stringify(next));
       return next;
     });
+
+    if (answer) {
+      setUnlockGameChoices((current) => {
+        const next = { ...current, [String(item.day)]: answer };
+        localStorage.setItem(GAME_CHOICES_KEY, JSON.stringify(next));
+        return next;
+      });
+    }
+
+    markDayViewed(item.day);
   };
 
   return (
@@ -69,7 +106,13 @@ export function AdventCalendar() {
 
       <div className="relative z-10">
         <CountdownHeader />
-        <CalendarGrid items={days} viewedDays={viewedDays} isUnlocked={isUnlocked} onSelect={selectDay} />
+        <CalendarGrid
+          items={days}
+          viewedDays={viewedDays}
+          completedUnlockGames={completedUnlockGames}
+          isUnlocked={isUnlocked}
+          onSelect={selectDay}
+        />
         <footer className="mt-14 text-center text-[10px] font-bold uppercase tracking-[0.22em] text-[#aa888a]">
           Hecho con amor para vos
         </footer>
@@ -79,6 +122,8 @@ export function AdventCalendar() {
         <DayModal
           item={selectedDay}
           contentUrl={contentUrls[String(selectedDay.day)]}
+          unlockGameCompleted={!hasPendingGame(selectedDay)}
+          onUnlockGameComplete={(answer) => completeUnlockGame(selectedDay, answer)}
           onClose={() => setSelectedDay(null)}
         />
       )}

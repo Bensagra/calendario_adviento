@@ -62,6 +62,14 @@ button {
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+.day-card-special {
+  border-color: rgba(216, 95, 101, 0.55);
+  box-shadow:
+    0 18px 42px rgba(216, 95, 101, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.75) inset;
+  animation: special-glow 3.4s ease-in-out infinite;
+}
+
 .modal-enter {
   animation: modal-enter 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -97,6 +105,19 @@ button {
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(-7deg); }
   50% { transform: translateY(-14px) rotate(5deg); }
+}
+
+@keyframes special-glow {
+  0%, 100% {
+    box-shadow:
+      0 18px 42px rgba(216, 95, 101, 0.16),
+      0 0 0 1px rgba(255, 255, 255, 0.75) inset;
+  }
+  50% {
+    box-shadow:
+      0 20px 48px rgba(216, 95, 101, 0.26),
+      0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

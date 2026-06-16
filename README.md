@@ -19,12 +19,16 @@ Editá `src/data/config.ts`:
 
 ```ts
 export const TEST_MODE = true;
-export const REUNION_DATE = "2026-06-30";
+export const CALENDAR_START_DATE = "2026-06-28";
+export const REUNION_DATE = "2026-07-18";
+export const SPECIAL_DATE = "2026-07-04";
 ```
 
 - `TEST_MODE = true`: todos los días se pueden abrir.
 - `TEST_MODE = false`: cada sorpresa respeta su `unlockDate`.
-- `REUNION_DATE`: fecha usada por el contador superior.
+- `CALENDAR_START_DATE`: fecha desde la que empieza a correr el contador superior.
+- `REUNION_DATE`: fecha usada por el contador superior para llegar a cero.
+- `SPECIAL_DATE`: fecha editable para marcar manualmente un día especial en `src/data/days.ts`.
 
 Antes de compartir la web, acordate de pasar `TEST_MODE` a `false`.
 
@@ -37,6 +41,8 @@ Toda la configuración está en `src/data/days.ts`. Cada día acepta:
 - `audio`: requiere un archivo `.mp3`.
 - `text`: usa el campo `text` y no necesita archivo.
 - `coupon`: usa el campo `text` y no necesita archivo.
+- `unlockGame`: mini juego previo a la sorpresa (`none`, `quiz`, `password`, `choice`, `mission`, `scratch` o `freeText`).
+- `isSpecialDate` y `specialLabel`: resaltan visualmente una tarjeta como día especial.
 
 Podés cambiar títulos, subtítulos, textos, tipos, rutas y fechas directamente en ese archivo.
 

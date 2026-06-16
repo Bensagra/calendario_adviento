@@ -4,9 +4,19 @@ import { useEffect } from "react";
 import type { CalendarDay } from "@/data/days";
 import { CloseIcon } from "./icons";
 import { ContentRenderer } from "./ContentRenderer";
+import { UnlockGameRenderer } from "./UnlockGameRenderer";
 
-export function DayModal({ item, contentUrl, onClose }: { item: CalendarDay; contentUrl?: string; onClose: () => void }) {
-  const isVideo = item.type === "video";
+interface DayModalProps {
+  item: CalendarDay;
+  contentUrl?: string;
+  unlockGameCompleted: boolean;
+  onUnlockGameComplete: (answer?: string) => void;
+  onClose: () => void;
+}
+
+export function DayModal({ item, contentUrl, unlockGameCompleted, onUnlockGameComplete, onClose }: DayModalProps) {
+  const shouldShowUnlockGame = Boolean(item.unlockGame && item.unlockGame.type !== "none" && !unlockGameCompleted);
+  const isVideo = item.type === "video" && !shouldShowUnlockGame;
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
@@ -43,7 +53,11 @@ export function DayModal({ item, contentUrl, onClose }: { item: CalendarDay; con
           </button>
         </div>
         <div className={isVideo ? "h-full w-full" : "mt-7"}>
-          <ContentRenderer key={contentUrl || item.file || item.day} item={item} contentUrl={contentUrl} />
+          {shouldShowUnlockGame && item.unlockGame ? (
+            <UnlockGameRenderer day={item} unlockGame={item.unlockGame} onComplete={onUnlockGameComplete} />
+          ) : (
+            <ContentRenderer key={contentUrl || item.file || item.day} item={item} contentUrl={contentUrl} />
+          )}
         </div>
       </div>
     </div>
