@@ -40,7 +40,7 @@ export interface CalendarDay {
 export const days: CalendarDay[] = [
   {
     day: 1,
-    title: "Antes de que te vayas",
+    title: "Para que no me extrañes tanto",
     subtitle: "Tengo algo para decirte",
     type: "video",
     file: "/content/1.mp4",
@@ -50,7 +50,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 2,
-    title: "Primer día menos",
+    title: "Inicio de una nueva aventura",
     subtitle: "Ya empezó la cuenta",
     type: "text",
     text: "Si hoy me extrañás aunque sea un poquito, acordate de que yo también estoy pensando en vos. Me encanta que estés viviendo este viaje, pero ya estoy contando cuánto falta para abrazarte.",
@@ -65,7 +65,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 3,
-    title: "Un audio para vos",
+    title: "Siempre me vas a llevar con vos",
     subtitle: "Para escucharme cerquita",
     type: "audio",
     file: "/content/3.mp3",
@@ -80,7 +80,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 4,
-    title: "Un recuerdo nuestro",
+    title: "La cajita del recuerdo",
     subtitle: "Hay momentos que me quedan guardados",
     type: "image",
     file: "/content/4.jpg",
@@ -95,17 +95,17 @@ export const days: CalendarDay[] = [
   },
   {
     day: 5,
-    title: "Cupón de salida",
-    subtitle: "Vos elegís, yo invito",
-    type: "coupon",
-    text: "Cupón válido por una salida elegida por vos cuando vuelvas. Yo invito, vos elegís. Incluye abrazo largo obligatorio.",
+    title: "Hasemer ionero",
+    subtitle: "Porque te extraño",
+    type: "video",
+    file: "/content/5.mp4",
     unlockDate: "2026-07-02",
     unlockGame: {
       type: "password",
-      question: "Soy algo que te voy a dar apenas vuelvas. Empiezo con ‘a’ y termina con ‘o’.",
+      question: "Para desbloquear el video, escribí lo que te voy a dar apenas vuelvas. Empieza con ‘a’ y termina con ‘o’.",
       acceptedAnswers: ["abrazo", "un abrazo"],
       placeholder: "Pista: lo vas a reclamar cuando vuelvas",
-      successMessage: "Exacto. Y va a ser largo ❤️",
+      successMessage: "Exacto. Ahora mirá esto ❤️",
     },
   },
   {
@@ -125,7 +125,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 7,
-    title: "Una cosa que me gusta de vos",
+    title: "Una de tantas cosas que me gustan de vos",
     subtitle: "Un día especial para decirte algo",
     type: "text",
     text: "Una de las cosas que más me gustan de vos es cómo hacés que todo se sienta más lindo. No importa si estamos haciendo algo especial o simplemente hablando, con vos todo tiene algo distinto.",
@@ -141,7 +141,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 8,
-    title: "Imagen exclusiva",
+    title: "Foto secreta",
     subtitle: "Nivel de extrañarte: ridículo",
     type: "image",
     file: "/content/8.jpg",
@@ -157,7 +157,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 9,
-    title: "Cupón de llamada",
+    title: "Para que escuches mi voz",
     subtitle: "Para cuando quieras escucharme",
     type: "coupon",
     text: "Cupón válido por una llamada larga cuando quieras. Sin límite de temas, sin límite de ‘te extraño’.",
@@ -171,7 +171,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 10,
-    title: "Mitad del viaje",
+    title: "Mitad del trayecto",
     subtitle: "Mitad cuenta, mitad drama",
     type: "video",
     file: "/content/10.mp4",
@@ -229,7 +229,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 14,
-    title: "Sorpresa fuera de la pantalla",
+    title: "Sorpresa",
     subtitle: "Capaz no todo está acá",
     type: "text",
     text: "Revisá bien. Capaz dejé algo donde menos te lo esperás. Hoy no todo está en la pantalla ❤️",
