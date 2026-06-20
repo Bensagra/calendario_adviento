@@ -243,7 +243,7 @@ export const days: CalendarDay[] = [
   },
   {
     day: 15,
-    title: "Tres meses",
+    title: "Algo muy nuestro",
     subtitle: "Este es especial",
     type: "video",
     file: "/content/15.mp4",

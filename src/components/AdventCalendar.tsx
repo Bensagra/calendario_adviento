@@ -7,6 +7,7 @@ import type { ContentUrls } from "@/data/contentUrls";
 import { CalendarGrid } from "./CalendarGrid";
 import { CountdownHeader } from "./CountdownHeader";
 import { DayModal } from "./DayModal";
+import { FloatingHearts } from "./FloatingHearts";
 import { HeartIcon } from "./icons";
 
 const STORAGE_KEY = "advent-calendar-viewed-days";
@@ -101,6 +102,7 @@ export function AdventCalendar() {
   return (
     <main className="page-background relative min-h-screen overflow-hidden px-3 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-20">
       <div className="grain pointer-events-none fixed inset-0" />
+      <FloatingHearts />
       <HeartIcon className="float-slow pointer-events-none absolute -left-4 top-72 h-20 w-20 rotate-[-12deg] text-white/30" />
       <HeartIcon className="float-delay pointer-events-none absolute -right-5 top-28 h-24 w-24 rotate-12 text-[#e9a8a5]/20" />
 
@@ -129,8 +131,9 @@ export function AdventCalendar() {
       )}
 
       {toast && (
-        <div role="status" className="modal-enter fixed bottom-5 left-1/2 z-[60] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-2xl bg-[#55373c] px-5 py-4 text-center text-sm font-semibold text-white shadow-xl">
-          Todavía no se desbloqueó este día ❤️
+        <div role="status" className="modal-enter fixed bottom-5 left-1/2 z-[60] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 items-center justify-center gap-2.5 rounded-2xl bg-[#55373c] px-5 py-4 text-center text-sm font-semibold text-white shadow-xl">
+          <HeartIcon className="heartbeat h-4 w-4 text-[#f5b8b3]" />
+          Todavía no se desbloqueó este día, ya falta menos ❤️
         </div>
       )}
     </main>

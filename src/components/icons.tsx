@@ -1,7 +1,7 @@
-type IconProps = { className?: string };
+type IconProps = { className?: string; style?: React.CSSProperties };
 
-export function HeartIcon({ className = "h-5 w-5" }: IconProps) {
-  return <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-8.5-5.2-8.5-12A4.5 4.5 0 0 1 12 6.9 4.5 4.5 0 0 1 20.5 9c0 6.8-8.5 12-8.5 12Z" /></svg>;
+export function HeartIcon({ className = "h-5 w-5", style }: IconProps) {
+  return <svg className={className} style={style} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-8.5-5.2-8.5-12A4.5 4.5 0 0 1 12 6.9 4.5 4.5 0 0 1 20.5 9c0 6.8-8.5 12-8.5 12Z" /></svg>;
 }
 
 export function LockIcon({ className = "h-5 w-5" }: IconProps) {
@@ -14,4 +14,8 @@ export function CheckIcon({ className = "h-4 w-4" }: IconProps) {
 
 export function CloseIcon({ className = "h-5 w-5" }: IconProps) {
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>;
+}
+
+export function SparkleIcon({ className = "h-4 w-4", style }: IconProps) {
+  return <svg className={className} style={style} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c.4 3.6 2.4 5.6 6 6-3.6.4-5.6 2.4-6 6-.4-3.6-2.4-5.6-6-6 3.6-.4 5.6-2.4 6-6Z" /></svg>;
 }
