@@ -53,7 +53,7 @@ export const days: CalendarDay[] = [
     title: "Inicio de una nueva aventura",
     subtitle: "Ya empezó la cuenta",
     type: "text",
-    text: "Si hoy me extrañás aunque sea un poquito, acordate de que yo también estoy pensando en vos. Me encanta que estés viviendo este viaje, pero ya estoy contando cuánto falta para abrazarte.",
+    text: "Israel es un lugar soñado! Hoy estas por llegar alla. El inicio de un viaje que te va a cambiar para siempre. T amo muchísimo. Y ya te extraño mas que nadie.",
     unlockDate: "2026-06-29",
     unlockGame: {
       type: "quiz",
