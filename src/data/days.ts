@@ -53,7 +53,7 @@ export const days: CalendarDay[] = [
     title: "Inicio de una nueva aventura",
     subtitle: "Ya empezó la cuenta",
     type: "text",
-    text: "Israel es un lugar soñado! Hoy estas por llegar alla. El inicio de un viaje que te va a cambiar para siempre. T amo muchísimo. Y ya te extraño mas que nadie.",
+    text: "Un viaje se vive tres veces: cuando se lo planea, cuando se lo vive y cuando se lo recuerda. \n Hoy iniciás la segunda etapa de tu viaje: vivirlo. Tal vez sea la etapa más linda, o tal vez esa sea la del recuerdo, cuando inevitablemente maquillamos un poco las cosas. \n La realidad es que hoy estás yendo a Israel, un lugar único en el mundo, donde nuestra historia está escrita, donde nuestras tradiciones están marcadas y donde se siente una esencia única en la Tierra Prometida. \n Este calendario tiene el objetivo de hacerte sentir un poquito más cerca mío, a través de risas, cosas graciosas y cartitas lindas. Esta es la primera, para acompañarte en el inicio de esta aventura y en tu llegada a Israel. \n Te amo demasiado, Danu. Sos una persona muy especial para mí y no puedo esperar a que llegue el momento de vivir tu viaje por tercera vez: el recuerdo. Ese recuerdo que espero que podamos revivir pegaditos, con vos contándome todo y volviendo a disfrutarnos físicamente. \n Te amo. Con todo el cariño del mundo. Tu benyu. Solamente tuyo.",
     unlockDate: "2026-06-29",
     unlockGame: {
       type: "quiz",
