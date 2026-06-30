@@ -81,10 +81,10 @@ export const days: CalendarDay[] = [
   {
     day: 4,
     title: "La cajita del recuerdo",
-    subtitle: "Hay momentos que me quedan guardados",
+    subtitle: "Hay momentos que me quedan guardados para siempre",
     type: "image",
     file: "/content/4.jpg",
-    text: "Este recuerdo me encanta porque me hace pensar en lo bien que me siento con vos. Hay momentos que parecen simples, pero después se quedan guardados.",
+    text: "Esta foto no es usual. Nunca la usamos. Es una foto muy nuestra donde creo que cuenta nuestra relación a la perfección. Dos bombones enamorados que disfrutan el uno del otro como nadie. Esa foto fue nuestra primera vez durmiendo juntos, en lo de luz. No me olvido más de como te abrace ese dia. Me encantaría poder hacerlo todas las noches y decirte lo mucho que te amo y lo mega especial que sos para mi. Hoy la vida nos tiene separados físicamente pero unidos sentimentalmente como siempre. El uno para el otro. TE AMO MUCHO DANU.",
     unlockDate: "2026-07-01",
     unlockGame: {
       type: "choice",
