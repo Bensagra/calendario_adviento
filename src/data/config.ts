@@ -3,5 +3,5 @@
 // false = cada día se abre solo en su fecha (modo regalo real).
 export const TEST_MODE = false;
 export const CALENDAR_START_DATE = "2026-06-28";
-export const REUNION_DATE = "2026-07-18";
+export const REUNION_DATE = "2026-07-17";
 export const SPECIAL_DATE = "2026-07-04";

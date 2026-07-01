@@ -29,6 +29,8 @@ export interface CalendarDay {
   subtitle: string;
   type: DayContentType;
   file?: string;
+  /** Canción de fondo opcional (se reproduce sola) cuando type === "image". */
+  audioFile?: string;
   text?: string;
   unlockDate: string;
   unlockGame?: UnlockGame;
@@ -97,8 +99,9 @@ export const days: CalendarDay[] = [
     day: 5,
     title: "Una canción para vos",
     subtitle: "Hay cosas que se dicen mejor cantando",
-    type: "video",
-    file: "/content/5.mp4",
+    type: "image",
+    file: "/content/5.png",
+    audioFile: "/content/5.mp3",
     unlockDate: "2026-07-02",
     unlockGame: {
       type: "quiz",

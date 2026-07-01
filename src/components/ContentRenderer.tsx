@@ -32,15 +32,21 @@ function AuxiliaryText({ text, floating = false }: { text?: string; floating?: b
 export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; contentUrl?: string }) {
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const source = contentUrl?.trim() || item.file;
 
   useEffect(() => {
-    if (item.type !== "video") return;
-
-    void videoRef.current?.play().catch(() => {
-      // Some browsers still block autoplay even after the user opened the day.
-    });
-  }, [item.type, source]);
+    // The user just tapped to open the day, so autoplay is usually allowed.
+    if (item.type === "video") {
+      void videoRef.current?.play().catch(() => {
+        // Some browsers still block autoplay even after the user opened the day.
+      });
+    } else if (item.type === "image" && item.audioFile) {
+      void audioRef.current?.play().catch(() => {
+        // If autoplay is blocked, the visible controls let her press play.
+      });
+    }
+  }, [item.type, item.audioFile, source]);
 
   if (item.type === "coupon") return <CouponCard text={item.text ?? ""} />;
 
@@ -61,6 +67,10 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
         {/* Native img lets us gracefully catch missing user-provided files. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={source} alt={item.title} onError={() => setHasError(true)} className="max-h-[65vh] w-full rounded-[1.75rem] object-contain shadow-lg" />
+        {item.audioFile ? (
+          // Background song for the photo. A failed song must not hide the photo, so it doesn't flip hasError.
+          <audio ref={audioRef} src={item.audioFile} autoPlay loop controls className="mt-4 w-full" />
+        ) : null}
         <AuxiliaryText text={item.text} />
       </div>
     );
