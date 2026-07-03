@@ -77,6 +77,18 @@ export function AdventCalendar() {
       return;
     }
 
+    // Los juegos con alwaysReplay se vuelven a jugar cada vez que se abre el día:
+    // olvidamos que estaba resuelto para que el juego aparezca de nuevo.
+    if (item.unlockGame?.alwaysReplay) {
+      setCompletedUnlockGames((current) => {
+        if (!current[String(item.day)]) return current;
+        const next = { ...current };
+        delete next[String(item.day)];
+        localStorage.setItem(COMPLETED_GAMES_KEY, JSON.stringify(next));
+        return next;
+      });
+    }
+
     setSelectedDay(item);
     if (!hasPendingGame(item)) markDayViewed(item.day);
   };

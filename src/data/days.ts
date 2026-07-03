@@ -9,7 +9,8 @@ export type UnlockGameType =
   | "choice"
   | "mission"
   | "scratch"
-  | "freeText";
+  | "freeText"
+  | "puzzle";
 
 export interface UnlockGame {
   type: UnlockGameType;
@@ -21,6 +22,12 @@ export interface UnlockGame {
   buttonText?: string;
   successMessage?: string;
   helperText?: string;
+  /** Foto del rompecabezas (solo cuando type === "puzzle"). Guardala en public/content. */
+  image?: string;
+  /** Piezas por lado del rompecabezas. 3 = 9 piezas (default), 4 = 16 piezas. */
+  gridSize?: number;
+  /** Si es true, el juego se vuelve a jugar cada vez que se abre el día (no se recuerda como resuelto). */
+  alwaysReplay?: boolean;
 }
 
 export interface CalendarDay {
@@ -113,17 +120,19 @@ export const days: CalendarDay[] = [
   },
   {
     day: 6,
-    title: "Reporte oficial",
-    subtitle: "Estado actual del novio",
-    type: "video",
-    file: "/content/6.mp4",
+    title: "La foto secreta",
+    subtitle: "Armá el rompecabezas para leer la carta",
+    type: "text",
+    text: "Dicen que las piezas de un rompecabezas están hechas para encajar. Pero la vida no funciona así. Caminamos rodeados de millones de piezas que nunca llegan a encontrarse, otras que parecen perfectas pero no coinciden, y algunas que, por más que uno insista, simplemente no pertenecen al mismo lugar. Por eso, cuando dos piezas se encuentran y encajan sin tener que forzarse, no es algo común. Es una de esas casualidades que parecen demasiado precisas para ser solo azar. Y creo que nosotros somos eso: dos piezas que, entre un mundo de posibilidades, terminaron encontrándose exactamente donde debían. Y esta conexión también es representada por el shabat. Shabat… Dia del descanso pero tambien dia de la conexión. Con la familia, con amigos, con dios. Shabat nos permite olvidar todas las otras cosas cotidianas para enfocarnos en lo que importa. Y eso que importa sos vos mi danucha. Ame el primer shabat que compartimos juntos. Este nos toca pasarlo a miles de kilometros pero yo se que como siempre hashem nos va a unir. Porque no es casualidad que nuestras piezas encajaron. Y nosotros estamos destinados a estar unidos. Hoy no será físicamente. Pero yo sé que sentimentalmente vamos a estarlo. Espero que disfrutes el shabaton un montón! Y si en algún momento necesitas hablar conmigo, solo cierra los ojos e imaginate que estas abrazada a mi diciéndome lo que necesites que yo siempre voy a estar ahí para acompañarte. Te amo mucho. Shabat shalom amor de mi vida.",
     unlockDate: "2026-07-03",
     unlockGame: {
-      type: "quiz",
-      question: "¿Cuál es mi estado actual sin vos?",
-      options: ["Perfectamente normal", "Dramático pero estable", "Insoportable", "Todas las anteriores"],
-      correctAnswer: "Todas las anteriores",
-      successMessage: "Correcto. Seguimos en estado crítico pero romántico.",
+      type: "puzzle",
+      image: "/content/6.jpg",
+      gridSize: 4,
+      alwaysReplay: true,
+      question: "Armá la foto secreta para desbloquear la carta.",
+      helperText: "Tocá una pieza y después otra para intercambiarlas. Cuando la foto quede completa, se abre la carta.",
+      successMessage: "¡La armaste! Ahí va la carta ❤️",
     },
   },
   {
