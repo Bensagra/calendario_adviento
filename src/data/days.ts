@@ -146,7 +146,6 @@ export const days: CalendarDay[] = [
     unlockDate: SPECIAL_DATE,
     isSpecialDate: true,
     specialLabel: "Día especial",
-    lockedMessage: "Bloqueado por no haber sido abierto en su día",
     unlockGame: {
       type: "password",
       question: "Para desbloquear el video, escribí lo que te voy a dar apenas vuelvas. Empieza con ‘a’ y termina con ‘o’.",
