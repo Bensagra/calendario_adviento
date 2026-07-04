@@ -13,13 +13,14 @@ interface DayCardProps {
 export function DayCard({ item, index, unlocked, viewed, completedGame, onClick }: DayCardProps) {
   const hasGame = item.unlockGame && item.unlockGame.type !== "none";
   const attention = unlocked && !viewed;
+  const isExpired = Boolean(item.lockedMessage);
 
   return (
     <div className="card-in h-full" style={{ animationDelay: `${index * 65}ms` }}>
       <button
         type="button"
         onClick={onClick}
-        aria-label={`Día ${item.day}: ${item.title}. ${unlocked ? "Desbloqueado" : "Bloqueado"}`}
+        aria-label={`Día ${item.day}: ${item.title}. ${unlocked ? "Desbloqueado" : isExpired ? "Bloqueado por no haber sido abierto en su día" : "Bloqueado"}`}
         className={`day-card group relative h-full w-full min-h-44 overflow-hidden rounded-[1.75rem] border p-4 text-left transition duration-300 active:scale-[0.97] sm:min-h-48 sm:p-5 ${
           unlocked
             ? "day-card-unlocked border-white/90 bg-white/72 hover:-translate-y-1.5 hover:bg-white/85"
@@ -63,7 +64,7 @@ export function DayCard({ item, index, unlocked, viewed, completedGame, onClick 
                 ) : (
                   <>
                     <SparkleIcon className="sparkle h-2.5 w-2.5" />
-                    Todavía falta
+                    {isExpired ? "Bloqueado" : "Todavía falta"}
                   </>
                 )}
               </span>

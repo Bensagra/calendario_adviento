@@ -31,7 +31,7 @@ export function AdventCalendar() {
   const [completedUnlockGames, setCompletedUnlockGames] = useState<CompletedUnlockGames>({});
   const [, setUnlockGameChoices] = useState<UnlockGameChoices>({});
   const [contentUrls, setContentUrls] = useState<ContentUrls>({});
-  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -55,7 +55,7 @@ export function AdventCalendar() {
       .catch(() => setContentUrls({}));
   }, []);
 
-  const isUnlocked = (item: CalendarDay) => TEST_MODE || getLocalDateKey() >= item.unlockDate;
+  const isUnlocked = (item: CalendarDay) => !item.lockedMessage && (TEST_MODE || getLocalDateKey() >= item.unlockDate);
   const hasPendingGame = (item: CalendarDay) => {
     const unlockGame = item.unlockGame;
     return Boolean(unlockGame && unlockGame.type !== "none" && !completedUnlockGames[String(item.day)]);
@@ -71,9 +71,15 @@ export function AdventCalendar() {
   };
 
   const selectDay = (item: CalendarDay) => {
+    if (item.lockedMessage) {
+      setToastMessage(item.lockedMessage);
+      window.setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
     if (!isUnlocked(item)) {
-      setToast(true);
-      window.setTimeout(() => setToast(false), 2400);
+      setToastMessage("Todavía no se desbloqueó este día, ya falta menos ❤️");
+      window.setTimeout(() => setToastMessage(null), 2400);
       return;
     }
 
@@ -142,10 +148,10 @@ export function AdventCalendar() {
         />
       )}
 
-      {toast && (
+      {toastMessage && (
         <div role="status" className="modal-enter fixed bottom-5 left-1/2 z-[60] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 items-center justify-center gap-2.5 rounded-2xl bg-[#55373c] px-5 py-4 text-center text-sm font-semibold text-white shadow-xl">
           <HeartIcon className="heartbeat h-4 w-4 text-[#f5b8b3]" />
-          Todavía no se desbloqueó este día, ya falta menos ❤️
+          {toastMessage}
         </div>
       )}
     </main>

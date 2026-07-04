@@ -18,8 +18,8 @@ export function CalendarGrid({ items, viewedDays, completedUnlockGames, isUnlock
           item={item}
           index={index}
           unlocked={isUnlocked(item)}
-          viewed={viewedDays.includes(item.day)}
-          completedGame={Boolean(completedUnlockGames[String(item.day)])}
+          viewed={!item.lockedMessage && viewedDays.includes(item.day)}
+          completedGame={!item.lockedMessage && Boolean(completedUnlockGames[String(item.day)])}
           onClick={() => onSelect(item)}
         />
       ))}

@@ -43,6 +43,8 @@ export interface CalendarDay {
   unlockGame?: UnlockGame;
   isSpecialDate?: boolean;
   specialLabel?: string;
+  /** Si existe, el día queda bloqueado y este mensaje aparece al tocarlo. */
+  lockedMessage?: string;
 }
 
 // Editá acá fechas, textos, juegos y premios. Las URLs externas se configuran en public/content/urls.json.
@@ -144,6 +146,7 @@ export const days: CalendarDay[] = [
     unlockDate: SPECIAL_DATE,
     isSpecialDate: true,
     specialLabel: "Día especial",
+    lockedMessage: "Bloqueado por no haber sido abierto en su día",
     unlockGame: {
       type: "password",
       question: "Para desbloquear el video, escribí lo que te voy a dar apenas vuelvas. Empieza con ‘a’ y termina con ‘o’.",
