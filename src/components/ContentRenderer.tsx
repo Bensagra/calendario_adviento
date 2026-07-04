@@ -5,6 +5,7 @@ import type { CalendarDay } from "@/data/days";
 import { getYouTubeEmbedUrl } from "@/data/contentUrls";
 import { CouponCard } from "./CouponCard";
 import { HeartIcon } from "./icons";
+import { RescueMissionGame } from "./RescueMissionGame";
 
 function MissingContent() {
   return (
@@ -49,6 +50,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   }, [item.type, item.audioFile, source]);
 
   if (item.type === "coupon") return <CouponCard text={item.text ?? ""} />;
+
+  if (item.type === "rescue" && item.rescueGame) return <RescueMissionGame game={item.rescueGame} />;
 
   if (item.type === "text") {
     return (

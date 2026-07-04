@@ -1,6 +1,20 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue";
+
+export interface RescueChallenge {
+  id: string;
+  emoji: string;
+  title: string;
+  description: string;
+}
+
+export interface RescueGame {
+  intro: string;
+  challenges: RescueChallenge[];
+  completionTitle: string;
+  completionMessage: string;
+}
 
 export type UnlockGameType =
   | "none"
@@ -45,6 +59,7 @@ export interface CalendarDay {
   specialLabel?: string;
   /** Si existe, el día queda bloqueado y este mensaje aparece al tocarlo. */
   lockedMessage?: string;
+  rescueGame?: RescueGame;
 }
 
 // Editá acá fechas, textos, juegos y premios. Las URLs externas se configuran en public/content/urls.json.
@@ -156,18 +171,71 @@ export const days: CalendarDay[] = [
   },
   {
     day: 8,
-    title: "Foto secreta",
-    subtitle: "Nivel de extrañarte: ridículo",
-    type: "image",
-    file: "/content/8.jpg",
-    text: "Imagen exclusiva de mí intentando hacerme el fuerte mientras vos estás lejos.",
+    title: "Operación: salvar a Benyu",
+    subtitle: "Una semana lejos. Nueve misiones. Un solo rescate.",
+    type: "rescue",
     unlockDate: "2026-07-05",
-    unlockGame: {
-      type: "quiz",
-      question: "¿Cuánto pensás que te estoy extrañando?",
-      options: ["Poco", "Normal", "Mucho", "Nivel ridículo"],
-      correctAnswer: "Nivel ridículo",
-      successMessage: "Sí. Nivel ridículo confirmado.",
+    unlockGame: { type: "none" },
+    rescueGame: {
+      intro: "Hace una semana que te fuiste y la extrañitis llegó a niveles peligrosos. Completá estas misiones durante el día, en el orden que quieras, para rescatarme.",
+      challenges: [
+        {
+          id: "hebrew-romance",
+          emoji: "אה",
+          title: "Romance en hebreo",
+          description: "Conseguí que alguien te enseñe una frase romántica en hebreo y mandámela.",
+        },
+        {
+          id: "ort-photo",
+          emoji: "📸",
+          title: "Prueba ORTográfica",
+          description: "Mandame por WhatsApp una foto con dos chicos de ORT.",
+        },
+        {
+          id: "secret-kindness",
+          emoji: "✨",
+          title: "Bondad secreta",
+          description: "Hacé una mini buena acción sin decirle a nadie cuál fue.",
+        },
+        {
+          id: "save-benyu-video",
+          emoji: "🎬",
+          title: "Pedido de auxilio",
+          description: "Conseguí que tres personas digan en un video: “¡Salven a Benyu!”.",
+        },
+        {
+          id: "heart-hunt",
+          emoji: "❤️",
+          title: "Cacería de corazones",
+          description: "Encontrá algo con forma de corazón y mandame una foto.",
+        },
+        {
+          id: "love-question",
+          emoji: "💬",
+          title: "La pregunta del amor",
+          description: "Preguntale a alguien qué haría por amor y mandame su respuesta.",
+        },
+        {
+          id: "benyu-pose",
+          emoji: "🥸",
+          title: "Modo Benyu",
+          description: "Sacate una foto imitando una pose mía y mandámela.",
+        },
+        {
+          id: "best-moment",
+          emoji: "🎤",
+          title: "Reporte del día",
+          description: "Mandame un audio de diez segundos contando el mejor momento de tu día.",
+        },
+        {
+          id: "night-selfie",
+          emoji: "🌙",
+          title: "Prueba de vida nocturna",
+          description: "Mandame una selfie a la noche para demostrar que completaste el rescate.",
+        },
+      ],
+      completionTitle: "¡Benyu fue rescatado!",
+      completionMessage: "Pasó una semana y, incluso a miles de kilómetros, seguís haciendo que cada día sea más lindo. Gracias por jugar, por elegirme y por salvarme de la extrañitis. Te amo, Danu ❤️",
     },
   },
   {
