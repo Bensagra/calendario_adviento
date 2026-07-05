@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { CalendarDay, UnlockGame } from "@/data/days";
 import { CheckIcon, HeartIcon } from "./icons";
 import { PuzzleGame } from "./PuzzleGame";
+import { TimeMachineGame } from "./TimeMachineGame";
 
 interface UnlockGameRendererProps {
   day: CalendarDay;
@@ -112,6 +113,10 @@ export function UnlockGameRenderer({ day, unlockGame, onComplete }: UnlockGameRe
 
       {unlockGame.type === "puzzle" && unlockGame.image && (
         <PuzzleGame image={unlockGame.image} gridSize={unlockGame.gridSize} onSolved={() => finish()} />
+      )}
+
+      {unlockGame.type === "timeMachine" && (
+        <TimeMachineGame onComplete={() => finish()} />
       )}
 
       {unlockGame.type === "mission" && (

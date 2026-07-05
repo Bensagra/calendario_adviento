@@ -307,6 +307,238 @@ button {
   100% { transform: translateX(-11px) rotate(-7deg); }
 }
 
+/* Máquina del tiempo del día 9 */
+.temporal-grid {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.92) 0 8%, transparent 34%),
+    linear-gradient(rgba(216, 95, 101, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216, 95, 101, 0.07) 1px, transparent 1px),
+    linear-gradient(145deg, #fff9f4, #f9ddd9);
+  background-size: auto, 24px 24px, 24px 24px, auto;
+}
+
+.temporal-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(216, 95, 101, 0.18);
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  animation: temporal-ring-pulse 3.8s ease-in-out infinite;
+}
+
+.temporal-ring-one {
+  width: 13rem;
+  height: 13rem;
+}
+
+.temporal-ring-two {
+  width: 8rem;
+  height: 8rem;
+  animation-delay: -1.9s;
+}
+
+.time-machine-heart {
+  transition:
+    left 1.45s cubic-bezier(0.45, 0, 0.22, 1),
+    top 1.45s cubic-bezier(0.45, 0, 0.22, 1),
+    filter 150ms ease;
+  will-change: left, top;
+}
+
+.time-machine-heart-bob {
+  animation-name: time-heart-bob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.time-destination {
+  animation: time-destination-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: opacity 180ms ease;
+}
+
+.time-core {
+  animation: time-core-glow 1.8s ease-in-out infinite;
+}
+
+.temporal-warp {
+  background: radial-gradient(circle at 50% 50%, #d85f65 0%, #6f1f2c 48%, #241018 100%);
+  animation: temporal-warp-in 1.9s ease both;
+}
+
+.temporal-vignette {
+  z-index: 3;
+  background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(29, 7, 14, 0.72) 100%);
+}
+
+.temporal-rays {
+  z-index: 1;
+  animation: temporal-rays-spin 1.9s cubic-bezier(0.32, 0, 0.67, 0) both;
+}
+
+.temporal-ray {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52%;
+  height: 2px;
+  transform-origin: left center;
+}
+
+.temporal-ray-beam {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 218, 211, 0.35), white);
+  animation: temporal-ray-flight 0.7s ease-in infinite;
+  transform-origin: left center;
+}
+
+.temporal-tunnel {
+  z-index: 2;
+  width: 9rem;
+  height: 9rem;
+  margin: -4.5rem;
+  border-radius: 9999px;
+  background: repeating-conic-gradient(from 10deg, rgba(255,255,255,0.92) 0deg 5deg, #e98c89 8deg 18deg, #9d2f3e 22deg 34deg);
+  box-shadow:
+    0 0 0 10px rgba(255, 255, 255, 0.12),
+    0 0 45px rgba(255, 226, 220, 0.72);
+  animation: temporal-tunnel-flight 1.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+.temporal-tunnel::before,
+.temporal-tunnel::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  border: 2px solid rgba(255, 255, 255, 0.62);
+}
+
+.temporal-tunnel::before { inset: 14px; }
+.temporal-tunnel::after { inset: 28px; }
+
+.temporal-tunnel-heart {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 1;
+  width: 4rem;
+  height: 4rem;
+  margin: -2rem;
+  border-radius: 9999px;
+  background: rgba(95, 20, 34, 0.72);
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.7);
+  animation: temporal-heart-beat 0.55s ease-in-out infinite;
+}
+
+.temporal-travel-copy {
+  z-index: 4;
+  min-height: 2.25rem;
+}
+
+.temporal-message {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  text-shadow: 0 2px 18px rgba(31, 5, 12, 0.75);
+}
+
+.temporal-message-one { animation: temporal-message 0.62s 0.04s ease both; }
+.temporal-message-two { animation: temporal-message 0.72s 0.58s ease both; }
+.temporal-message-three { animation: temporal-message 0.55s 1.3s ease both; }
+
+.temporal-flash {
+  z-index: 5;
+  pointer-events: none;
+  background: white;
+  opacity: 0;
+  animation: temporal-flash 0.34s 1.56s ease-in both;
+}
+
+.time-travel-button {
+  position: relative;
+}
+
+.time-travel-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.42) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: time-button-sheen 2.4s ease-in-out infinite;
+}
+
+@keyframes time-heart-bob {
+  0%, 100% { transform: translate(0, 0) rotate(-6deg) scale(1); }
+  35% { transform: translate(2px, -4px) rotate(5deg) scale(1.08); }
+  70% { transform: translate(-2px, 2px) rotate(-2deg) scale(0.98); }
+}
+
+@keyframes temporal-ring-pulse {
+  0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(0.92); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes time-destination-in {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes time-core-glow {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 32px rgba(216, 95, 101, 0.28); }
+  50% { transform: scale(1.04); box-shadow: 0 0 54px rgba(216, 95, 101, 0.48); }
+}
+
+@keyframes temporal-warp-in {
+  0% { opacity: 0; filter: brightness(1.8); }
+  12%, 100% { opacity: 1; }
+  45% { filter: brightness(1); }
+  82% { filter: brightness(1.45); }
+  100% { filter: brightness(2); }
+}
+
+@keyframes temporal-rays-spin {
+  0% { opacity: 0; transform: rotate(0deg) scale(0.45); }
+  18% { opacity: 1; }
+  100% { opacity: 1; transform: rotate(95deg) scale(1.9); }
+}
+
+@keyframes temporal-ray-flight {
+  0% { opacity: 0; transform: scaleX(0.05); }
+  28% { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1.35); }
+}
+
+@keyframes temporal-tunnel-flight {
+  0% { opacity: 0; transform: scale(0.28) rotate(0deg); }
+  16% { opacity: 1; }
+  58% { transform: scale(1.05) rotate(190deg); }
+  100% { opacity: 1; transform: scale(4.8) rotate(470deg); }
+}
+
+@keyframes temporal-heart-beat {
+  0%, 100% { transform: scale(0.88); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes temporal-message {
+  0% { opacity: 0; transform: translateY(8px) scale(0.96); }
+  22%, 74% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-7px) scale(1.03); }
+}
+
+@keyframes temporal-flash {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes time-button-sheen {
+  0%, 55% { transform: translateX(-120%); }
+  90%, 100% { transform: translateX(120%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

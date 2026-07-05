@@ -24,7 +24,8 @@ export type UnlockGameType =
   | "mission"
   | "scratch"
   | "freeText"
-  | "puzzle";
+  | "puzzle"
+  | "timeMachine";
 
 export interface UnlockGame {
   type: UnlockGameType;
@@ -240,16 +241,16 @@ export const days: CalendarDay[] = [
   },
   {
     day: 9,
-    title: "Para que escuches mi voz",
-    subtitle: "Para cuando quieras escucharme",
-    type: "coupon",
-    text: "Cupón válido por una llamada larga cuando quieras. Sin límite de temas, sin límite de ‘te extraño’.",
+    title: "Un mensaje de Benyu del futuro",
+    subtitle: "Enviado desde el día en que ya volviste",
+    type: "text",
+    text: "Hola, Danu. Te escribo desde el futuro. Ya volviste, ya te abracé y sí: la espera valió la pena.",
     unlockDate: "2026-07-06",
     unlockGame: {
-      type: "mission",
-      question: "Para desbloquear este cupón, mandame un audio de 5 segundos diciendo ‘hola, extraño’.",
-      buttonText: "Ya lo mandé",
-      successMessage: "Perfecto. Cupón desbloqueado ❤️",
+      type: "timeMachine",
+      question: "El mensaje de Benyu quedó atrapado en el tiempo.",
+      helperText: "Conseguí nueve corazones para cargar la máquina y traerlo hasta el presente.",
+      successMessage: "Viaje completado. Tenés un mensaje de Benyu ❤️",
     },
   },
   {
