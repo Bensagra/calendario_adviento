@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard";
 
 export interface RescueChallenge {
   id: string;
@@ -14,6 +14,14 @@ export interface RescueGame {
   challenges: RescueChallenge[];
   completionTitle: string;
   completionMessage: string;
+}
+
+export interface PostcardConfig {
+  prompt: string;
+  defaultPlace: string;
+  defaultMessage: string;
+  defaultSignature: string;
+  shareText: string;
 }
 
 export type UnlockGameType =
@@ -61,6 +69,7 @@ export interface CalendarDay {
   /** Si existe, el día queda bloqueado y este mensaje aparece al tocarlo. */
   lockedMessage?: string;
   rescueGame?: RescueGame;
+  postcard?: PostcardConfig;
 }
 
 // Editá acá fechas, textos, juegos y premios. Las URLs externas se configuran en public/content/urls.json.
@@ -267,17 +276,17 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 10,
-    title: "Mitad del trayecto",
-    subtitle: "Mitad cuenta, mitad drama",
-    type: "video",
-    file: "/content/10.mp4",
+    title: "Postal viva desde Israel",
+    subtitle: "Armá una postal para que viaje hasta mí",
+    type: "postcard",
     unlockDate: "2026-07-07",
-    unlockGame: {
-      type: "quiz",
-      question: "Si ya pasaron 10 días de 20, ¿qué significa?",
-      options: ["Falta muchísimo", "Estamos en la mitad", "Que vos sos dramático", "Las dos últimas"],
-      correctAnswer: "Las dos últimas",
-      successMessage: "Correcto. Estamos en la mitad y sí, soy dramático.",
+    unlockGame: { type: "none" },
+    postcard: {
+      prompt: "Dejame un pedacito de tu día en formato postal. Yo la recibo como si me llegara desde allá.",
+      defaultPlace: "Israel",
+      defaultMessage: "Hoy pensé en vos cuando...",
+      defaultSignature: "Danu",
+      shareText: "Benyu, te mando mi postal viva desde Israel ❤️",
     },
   },
   {

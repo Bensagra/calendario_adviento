@@ -17,6 +17,7 @@ interface DayModalProps {
 export function DayModal({ item, contentUrl, unlockGameCompleted, onUnlockGameComplete, onClose }: DayModalProps) {
   const shouldShowUnlockGame = Boolean(item.unlockGame && item.unlockGame.type !== "none" && !unlockGameCompleted);
   const isVideo = item.type === "video" && !shouldShowUnlockGame;
+  const modalWidth = item.type === "postcard" ? "max-w-5xl" : "max-w-2xl";
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
@@ -38,7 +39,7 @@ export function DayModal({ item, contentUrl, unlockGameCompleted, onUnlockGameCo
         onMouseDown={(event) => event.stopPropagation()}
         className={isVideo
           ? "modal-enter fixed inset-0 h-screen w-screen overflow-hidden bg-black"
-          : "modal-enter max-h-[94vh] w-full max-w-2xl overflow-y-auto rounded-t-[2rem] bg-[#fffaf6] p-5 shadow-2xl sm:rounded-[2.25rem] sm:p-8"}
+          : `modal-enter max-h-[94vh] w-full ${modalWidth} overflow-y-auto rounded-t-[2rem] bg-[#fffaf6] p-5 shadow-2xl sm:rounded-[2.25rem] sm:p-8`}
       >
         <div className={isVideo ? "pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-end p-4" : "flex items-start justify-between gap-5"}>
           {!isVideo && (
