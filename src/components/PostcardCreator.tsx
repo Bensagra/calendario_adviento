@@ -17,6 +17,9 @@ interface PostcardPreset {
   colors: [string, string, string];
   accent: string;
   ink: string;
+  image: string;
+  credit: string;
+  sourceUrl: string;
 }
 
 interface PostcardDraft {
@@ -42,6 +45,9 @@ const presets: PostcardPreset[] = [
     colors: ["#f5bd66", "#8f6fae", "#24476e"],
     accent: "#c85260",
     ink: "#432c31",
+    image: "/content/postcard-backgrounds/jerusalem.jpg",
+    credit: "Ilanit Ohana / Unsplash",
+    sourceUrl: "https://unsplash.com/photos/6nSAHTGfzEY",
   },
   {
     id: "desert",
@@ -51,6 +57,9 @@ const presets: PostcardPreset[] = [
     colors: ["#be7347", "#f0c987", "#4c827b"],
     accent: "#aa5548",
     ink: "#4a3027",
+    image: "/content/postcard-backgrounds/desert.jpg",
+    credit: "Avi Theret / Unsplash",
+    sourceUrl: "https://unsplash.com/photos/HhhUZxsO_Ak",
   },
   {
     id: "telaviv",
@@ -60,6 +69,9 @@ const presets: PostcardPreset[] = [
     colors: ["#2685b5", "#f3bd61", "#fff1d7"],
     accent: "#147d94",
     ink: "#213843",
+    image: "/content/postcard-backgrounds/telaviv.jpg",
+    credit: "Marat Badykov / Unsplash",
+    sourceUrl: "https://unsplash.com/photos/GIx7TN7s9Kg",
   },
   {
     id: "shabbat",
@@ -69,6 +81,9 @@ const presets: PostcardPreset[] = [
     colors: ["#182b58", "#845278", "#ffd19b"],
     accent: "#d98c7a",
     ink: "#fdf1e6",
+    image: "/content/postcard-backgrounds/shabbat.jpg",
+    credit: "Kanishk Agarwal / Unsplash",
+    sourceUrl: "https://unsplash.com/photos/Rfa4f100Jeo",
   },
   {
     id: "camino",
@@ -78,6 +93,9 @@ const presets: PostcardPreset[] = [
     colors: ["#c95261", "#eca067", "#5e9888"],
     accent: "#ad4050",
     ink: "#3f3032",
+    image: "/content/postcard-backgrounds/camino.jpg",
+    credit: "Robert Bye / Unsplash",
+    sourceUrl: "https://unsplash.com/photos/6PLB5SKWiIY",
   },
 ];
 
@@ -214,6 +232,21 @@ function drawCoverImage(ctx: CanvasRenderingContext2D, image: HTMLImageElement, 
   ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
 }
 
+function drawContainImage(ctx: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, width: number, height: number) {
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const drawWidth = image.naturalWidth * scale;
+  const drawHeight = image.naturalHeight * scale;
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + height - drawHeight;
+
+  ctx.save();
+  ctx.shadowColor = "rgba(34, 21, 26, 0.34)";
+  ctx.shadowBlur = 22;
+  ctx.shadowOffsetY = 18;
+  ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  ctx.restore();
+}
+
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxLines: number) {
   const words = text.replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
   const lines: string[] = [];
@@ -274,131 +307,21 @@ function drawPill(ctx: CanvasRenderingContext2D, text: string, x: number, y: num
   return width;
 }
 
-function drawScenery(ctx: CanvasRenderingContext2D, preset: PostcardPreset, x: number, y: number, width: number, height: number) {
-  const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-  gradient.addColorStop(0, preset.colors[0]);
-  gradient.addColorStop(0.54, preset.colors[1]);
-  gradient.addColorStop(1, preset.colors[2]);
-  fillRoundedRect(ctx, x, y, width, height, 44, gradient);
-
-  ctx.save();
-  ctx.beginPath();
-  roundedPath(ctx, x, y, width, height, 44);
-  ctx.clip();
-
-  ctx.globalAlpha = 0.26;
-  for (let i = 0; i < 34; i += 1) {
-    const dotX = x + ((i * 157) % width);
-    const dotY = y + ((i * 89) % height);
-    ctx.beginPath();
-    ctx.arc(dotX, dotY, 2 + (i % 3), 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-
-  if (preset.id === "telaviv") {
-    ctx.fillStyle = "rgba(255, 255, 255, 0.72)";
-    ctx.beginPath();
-    ctx.arc(x + width * 0.78, y + height * 0.22, 70, 0, Math.PI * 2);
-    ctx.fill();
-
-    for (let wave = 0; wave < 4; wave += 1) {
-      ctx.beginPath();
-      ctx.strokeStyle = wave % 2 ? "rgba(255, 255, 255, 0.55)" : "rgba(33, 56, 67, 0.22)";
-      ctx.lineWidth = 10;
-      const waveY = y + height * (0.58 + wave * 0.1);
-      ctx.moveTo(x - 20, waveY);
-      for (let t = 0; t <= width + 40; t += 46) {
-        ctx.quadraticCurveTo(x + t + 23, waveY - 24, x + t + 46, waveY);
-      }
-      ctx.stroke();
-    }
-  } else if (preset.id === "desert") {
-    for (let dune = 0; dune < 3; dune += 1) {
-      ctx.beginPath();
-      ctx.fillStyle = dune === 0 ? "rgba(255, 240, 207, 0.75)" : dune === 1 ? "rgba(145, 90, 58, 0.24)" : "rgba(75, 96, 88, 0.24)";
-      const duneY = y + height * (0.58 + dune * 0.12);
-      ctx.moveTo(x - 40, y + height);
-      ctx.quadraticCurveTo(x + width * 0.26, duneY - 70, x + width * 0.58, duneY);
-      ctx.quadraticCurveTo(x + width * 0.82, duneY + 70, x + width + 40, duneY - 30);
-      ctx.lineTo(x + width + 40, y + height + 40);
-      ctx.lineTo(x - 40, y + height + 40);
-      ctx.fill();
-    }
-  } else if (preset.id === "shabbat") {
-    ctx.fillStyle = "rgba(255, 238, 204, 0.72)";
-    for (let i = 0; i < 24; i += 1) {
-      const starX = x + 64 + ((i * 97) % (width - 128));
-      const starY = y + 40 + ((i * 53) % Math.round(height * 0.46));
-      ctx.beginPath();
-      ctx.arc(starX, starY, i % 5 === 0 ? 4 : 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    fillRoundedRect(ctx, x + width * 0.32, y + height * 0.58, 38, 148, 18, "rgba(255, 247, 230, 0.8)");
-    fillRoundedRect(ctx, x + width * 0.56, y + height * 0.58, 38, 148, 18, "rgba(255, 247, 230, 0.8)");
-    ctx.fillStyle = "rgba(255, 205, 125, 0.95)";
-    ctx.beginPath();
-    ctx.ellipse(x + width * 0.34, y + height * 0.54, 18, 34, 0, 0, Math.PI * 2);
-    ctx.ellipse(x + width * 0.58, y + height * 0.54, 18, 34, 0, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (preset.id === "camino") {
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(255, 245, 226, 0.62)";
-    ctx.moveTo(x + width * 0.46, y + height);
-    ctx.quadraticCurveTo(x + width * 0.64, y + height * 0.58, x + width * 0.5, y + height * 0.22);
-    ctx.quadraticCurveTo(x + width * 0.68, y + height * 0.64, x + width * 0.72, y + height);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = "rgba(57, 91, 78, 0.25)";
-    ctx.beginPath();
-    ctx.moveTo(x, y + height * 0.72);
-    ctx.quadraticCurveTo(x + width * 0.24, y + height * 0.52, x + width * 0.52, y + height * 0.72);
-    ctx.quadraticCurveTo(x + width * 0.72, y + height * 0.88, x + width, y + height * 0.68);
-    ctx.lineTo(x + width, y + height);
-    ctx.lineTo(x, y + height);
-    ctx.fill();
-  } else {
-    ctx.fillStyle = "rgba(255, 241, 214, 0.82)";
-    ctx.beginPath();
-    ctx.arc(x + width * 0.22, y + height * 0.52, 92, Math.PI, 0);
-    ctx.rect(x + width * 0.22 - 92, y + height * 0.52, 184, 132);
-    ctx.fill();
-    ctx.fillStyle = "rgba(65, 48, 89, 0.28)";
-    for (let i = 0; i < 7; i += 1) {
-      const towerX = x + width * 0.1 + i * width * 0.12;
-      const towerHeight = 90 + (i % 3) * 38;
-      fillRoundedRect(ctx, towerX, y + height - towerHeight - 84, 72, towerHeight + 84, 20, "rgba(255, 248, 228, 0.54)");
-      ctx.beginPath();
-      ctx.moveTo(towerX, y + height - towerHeight - 84);
-      ctx.lineTo(towerX + 36, y + height - towerHeight - 132);
-      ctx.lineTo(towerX + 72, y + height - towerHeight - 84);
-      ctx.fill();
-    }
-  }
-
-  const shade = ctx.createLinearGradient(x, y + height * 0.45, x, y + height);
-  shade.addColorStop(0, "rgba(0, 0, 0, 0)");
-  shade.addColorStop(1, "rgba(0, 0, 0, 0.22)");
-  ctx.fillStyle = shade;
-  ctx.fillRect(x, y, width, height);
-  ctx.restore();
-}
-
 function drawPostcardCanvas(
   ctx: CanvasRenderingContext2D,
   draft: PostcardDraft,
   preset: PostcardPreset,
-  photo: HTMLImageElement | null,
+  background: HTMLImageElement,
+  subject: HTMLImageElement | null,
   day: number,
 ) {
   const width = 1080;
   const height = 1440;
-  const background = ctx.createLinearGradient(0, 0, width, height);
-  background.addColorStop(0, "#fffaf4");
-  background.addColorStop(0.46, "#ffe4db");
-  background.addColorStop(1, "#f7d5c1");
-  ctx.fillStyle = background;
+  const paperGradient = ctx.createLinearGradient(0, 0, width, height);
+  paperGradient.addColorStop(0, "#fffaf4");
+  paperGradient.addColorStop(0.46, "#ffe4db");
+  paperGradient.addColorStop(1, "#f7d5c1");
+  ctx.fillStyle = paperGradient;
   ctx.fillRect(0, 0, width, height);
 
   ctx.save();
@@ -444,22 +367,23 @@ function drawPostcardCanvas(
   ctx.fillText("BENYU", 70, 94);
   ctx.restore();
 
-  if (photo) {
-    fillRoundedRect(ctx, 62, 154, 956, 614, 50, "#ffffff");
-    ctx.save();
-    ctx.beginPath();
-    roundedPath(ctx, 86, 178, 908, 566, 38);
-    ctx.clip();
-    drawCoverImage(ctx, photo, 86, 178, 908, 566);
-    const overlay = ctx.createLinearGradient(86, 178, 994, 744);
-    overlay.addColorStop(0, "rgba(255, 255, 255, 0.04)");
-    overlay.addColorStop(1, "rgba(58, 32, 40, 0.24)");
-    ctx.fillStyle = overlay;
-    ctx.fillRect(86, 178, 908, 566);
-    ctx.restore();
-  } else {
-    drawScenery(ctx, preset, 62, 154, 956, 614);
+  fillRoundedRect(ctx, 62, 154, 956, 614, 50, "#ffffff");
+  ctx.save();
+  ctx.beginPath();
+  roundedPath(ctx, 86, 178, 908, 566, 38);
+  ctx.clip();
+  drawCoverImage(ctx, background, 86, 178, 908, 566);
+  const overlay = ctx.createLinearGradient(86, 178, 994, 744);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.06)");
+  overlay.addColorStop(0.5, "rgba(31, 22, 31, 0.04)");
+  overlay.addColorStop(1, "rgba(31, 18, 24, 0.34)");
+  ctx.fillStyle = overlay;
+  ctx.fillRect(86, 178, 908, 566);
+
+  if (subject) {
+    drawContainImage(ctx, subject, 150, 230, 780, 510);
   }
+  ctx.restore();
 
   strokeRoundedRect(ctx, 62, 154, 956, 614, 50, "rgba(255, 255, 255, 0.78)", 10);
 
@@ -522,8 +446,11 @@ async function createPostcardFile(draft: PostcardDraft, preset: PostcardPreset, 
   const context = canvas.getContext("2d");
   if (!context) throw new Error("No se pudo crear la postal.");
 
-  const photo = photoUrl ? await loadImage(photoUrl).catch(() => null) : null;
-  drawPostcardCanvas(context, draft, preset, photo, day);
+  const [background, subject] = await Promise.all([
+    loadImage(preset.image),
+    photoUrl ? loadImage(photoUrl).catch(() => null) : Promise.resolve(null),
+  ]);
+  drawPostcardCanvas(context, draft, preset, background, subject, day);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob((result) => {
@@ -551,6 +478,65 @@ function openWhatsApp(text: string) {
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
 }
 
+async function removePeopleBackground(file: File) {
+  const originalUrl = URL.createObjectURL(file);
+
+  try {
+    const image = await loadImage(originalUrl);
+    const { SelfieSegmentation } = await import("@mediapipe/selfie_segmentation");
+    const segmenter = new SelfieSegmentation({
+      locateFile: (path) => `/mediapipe/selfie_segmentation/${path}`,
+    });
+
+    segmenter.setOptions({ modelSelection: 1, selfieMode: false });
+
+    const results = await new Promise<{ image: CanvasImageSource; segmentationMask: CanvasImageSource }>((resolve, reject) => {
+      const timeout = window.setTimeout(() => reject(new Error("No se pudo recortar la imagen.")), 14000);
+
+      segmenter.onResults((nextResults) => {
+        window.clearTimeout(timeout);
+        resolve(nextResults);
+      });
+
+      segmenter.send({ image }).catch((error) => {
+        window.clearTimeout(timeout);
+        reject(error);
+      });
+    });
+
+    await segmenter.close().catch(() => undefined);
+
+    const maxSize = 1400;
+    const scale = Math.min(1, maxSize / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.round(image.naturalWidth * scale);
+    const height = Math.round(image.naturalHeight * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("No se pudo preparar el recorte.");
+
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.filter = "blur(1.2px)";
+    context.drawImage(results.segmentationMask, 0, 0, width, height);
+    context.restore();
+    context.globalCompositeOperation = "source-in";
+    context.drawImage(image, 0, 0, width, height);
+    context.globalCompositeOperation = "source-over";
+
+    return await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error("No se pudo exportar el recorte."));
+      }, "image/png");
+    });
+  } finally {
+    URL.revokeObjectURL(originalUrl);
+  }
+}
+
 const steps = [
   {
     title: "Fondo",
@@ -562,7 +548,7 @@ const steps = [
     title: "Momento",
     shortTitle: "Foto",
     eyebrow: "Paso 2 de 4",
-    helper: "Sumá una foto del día o dejá el fondo ilustrado. Después completá desde dónde llega la postal.",
+    helper: "Subí una foto de ustedes. La app le saca el fondo y los pone sobre el paisaje que elegiste.",
   },
   {
     title: "Mensaje",
@@ -588,77 +574,20 @@ const messageIdeas = [
 ];
 
 function MiniScenery({ preset, photoUrl, compact = false }: { preset: PostcardPreset; photoUrl: string | null; compact?: boolean }) {
-  const backgroundStyle: CSSProperties = {
-    background:
-      `radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.62), transparent 16%), ` +
-      `linear-gradient(135deg, ${preset.colors[0]}, ${preset.colors[1]} 52%, ${preset.colors[2]})`,
-  };
-
-  if (photoUrl) {
-    return (
-      // Native img keeps user-picked local files simple and avoids Next image optimization.
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={photoUrl} alt="Foto elegida para la postal" className="h-full w-full object-cover" />
-    );
-  }
-
   return (
-    <div className="relative h-full w-full overflow-hidden" style={backgroundStyle}>
-      <span className="absolute inset-0 bg-[linear-gradient(110deg,rgba(255,255,255,0.18),transparent_34%,rgba(0,0,0,0.12))]" />
-
-      {preset.id === "telaviv" && (
-        <>
-          <span className={`${compact ? "h-12 w-12" : "h-20 w-20"} absolute right-[14%] top-[13%] rounded-full bg-white/75 shadow-[0_0_24px_rgba(255,255,255,0.52)]`} />
-          <span className="absolute bottom-[22%] left-[-10%] h-[18%] w-[122%] rounded-[100%] border-t-[10px] border-white/58" />
-          <span className="absolute bottom-[12%] left-[-14%] h-[20%] w-[128%] rounded-[100%] border-t-[11px] border-[#1f6988]/32" />
-          <span className="absolute bottom-[3%] left-[-8%] h-[20%] w-[118%] rounded-[100%] border-t-[10px] border-white/48" />
-        </>
-      )}
-
-      {preset.id === "desert" && (
-        <>
-          <span className="absolute bottom-[-10%] left-[-18%] h-[38%] w-[88%] rounded-[100%] bg-[#fff0ce]/70" />
-          <span className="absolute bottom-[-6%] right-[-16%] h-[42%] w-[92%] rounded-[100%] bg-[#8d5d46]/30" />
-          <span className="absolute bottom-[8%] left-[18%] h-[30%] w-[96%] rounded-[100%] bg-[#49746e]/24" />
-          <span className="absolute left-[16%] top-[20%] h-14 w-14 rounded-full bg-[#fff2cd]/75" />
-        </>
-      )}
-
-      {preset.id === "shabbat" && (
-        <>
-          {Array.from({ length: compact ? 10 : 18 }, (_, index) => (
-            <span
-              key={index}
-              className="absolute h-1.5 w-1.5 rounded-full bg-[#ffe3b7]/80"
-              style={{ left: `${10 + ((index * 23) % 78)}%`, top: `${10 + ((index * 17) % 42)}%` }}
-            />
-          ))}
-          <span className="absolute bottom-[14%] left-[32%] h-[30%] w-[8%] rounded-t-full bg-white/78" />
-          <span className="absolute bottom-[14%] left-[57%] h-[30%] w-[8%] rounded-t-full bg-white/78" />
-          <span className="absolute bottom-[43%] left-[31%] h-[12%] w-[10%] rounded-[100%] bg-[#ffd48f]" />
-          <span className="absolute bottom-[43%] left-[56%] h-[12%] w-[10%] rounded-[100%] bg-[#ffd48f]" />
-        </>
-      )}
-
-      {preset.id === "camino" && (
-        <>
-          <span className="absolute bottom-[-8%] left-[-20%] h-[42%] w-[84%] rounded-[100%] bg-[#325e56]/28" />
-          <span className="absolute bottom-[-12%] right-[-20%] h-[45%] w-[88%] rounded-[100%] bg-[#fff0c9]/38" />
-          <span className="absolute bottom-[-4%] left-[42%] h-[86%] w-[24%] rotate-[12deg] rounded-t-[100%] bg-[#fff7e4]/58" />
-          <span className="absolute left-[18%] top-[17%] h-10 w-24 rounded-full bg-white/38" />
-        </>
-      )}
-
-      {preset.id === "jerusalem" && (
-        <>
-          <span className="absolute left-[10%] top-[24%] h-[18%] w-[18%] rounded-t-full bg-[#fff0ce]/75" />
-          <span className="absolute bottom-[14%] left-[8%] h-[34%] w-[16%] rounded-t-2xl bg-[#fff7dd]/58" />
-          <span className="absolute bottom-[14%] left-[26%] h-[42%] w-[15%] rounded-t-2xl bg-[#fff7dd]/45" />
-          <span className="absolute bottom-[14%] left-[44%] h-[30%] w-[17%] rounded-t-full bg-[#fff7dd]/66" />
-          <span className="absolute bottom-[14%] left-[64%] h-[38%] w-[16%] rounded-t-2xl bg-[#fff7dd]/52" />
-          <span className="absolute bottom-[14%] right-[5%] h-[28%] w-[14%] rounded-t-2xl bg-[#fff7dd]/44" />
-          <span className="absolute bottom-[9%] left-0 h-[11%] w-full bg-[#3a3052]/22" />
-        </>
+    <div className="relative h-full w-full overflow-hidden bg-[#efe1d6]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={preset.image} alt="" aria-hidden className="h-full w-full object-cover" />
+      <span className="absolute inset-0 bg-[linear-gradient(160deg,rgba(255,255,255,0.12),transparent_32%,rgba(29,16,24,0.36))]" />
+      {photoUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={photoUrl}
+          alt="Foto recortada"
+          className={`absolute left-1/2 bottom-[-1%] -translate-x-1/2 object-contain drop-shadow-[0_12px_20px_rgba(25,15,18,0.36)] ${
+            compact ? "max-h-[88%] max-w-[86%]" : "max-h-[82%] max-w-[86%]"
+          }`}
+        />
       )}
     </div>
   );
@@ -750,7 +679,7 @@ function SendInstructions() {
       <ol className="mt-3 space-y-3 text-sm font-semibold leading-6 text-[#62484c]">
         <li className="flex gap-3">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">1</span>
-          <span>Tocá <span className="font-black">Generar JPG</span>. La app arma la postal como imagen.</span>
+          <span>Tocá <span className="font-black">Generar JPG</span>. La app une el fondo, la foto recortada y tu mensaje.</span>
         </li>
         <li className="flex gap-3">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">2</span>
@@ -758,7 +687,7 @@ function SendInstructions() {
         </li>
         <li className="flex gap-3">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">3</span>
-          <span>Mandá la foto. Si WhatsApp no pega el texto solo, usá <span className="font-black">Copiar texto</span> y pegalo en el chat.</span>
+          <span>Mandá la postal. Si WhatsApp no pega el texto solo, usá <span className="font-black">Copiar texto</span> y pegalo en el chat.</span>
         </li>
       </ol>
     </div>
@@ -774,6 +703,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
   const [ready, setReady] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState("");
+  const [processingPhoto, setProcessingPhoto] = useState(false);
   const [generated, setGenerated] = useState<GeneratedPostcard | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
@@ -929,7 +859,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
     setStatus("JPG descargado.");
   };
 
-  const choosePhoto = (file?: File) => {
+  const choosePhoto = async (file?: File) => {
     clearGeneratedResult();
     setStatus("");
 
@@ -944,11 +874,23 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
       return;
     }
 
-    const nextUrl = URL.createObjectURL(file);
-    photoUrlRef.current = nextUrl;
-    setPhotoUrl(nextUrl);
     setPhotoName(file.name);
-    setStatus("Foto lista para la postal.");
+    setProcessingPhoto(true);
+    setStatus("Sacando el fondo de la foto...");
+
+    try {
+      const cutout = await removePeopleBackground(file);
+      const nextUrl = URL.createObjectURL(cutout);
+      photoUrlRef.current = nextUrl;
+      setPhotoUrl(nextUrl);
+      setStatus("Listo: ya los recorté y los puse sobre el fondo.");
+    } catch {
+      setPhotoName("");
+      setPhotoUrl(null);
+      setStatus("No pude recortar esa foto. Probá con una imagen donde ustedes se vean claros.");
+    } finally {
+      setProcessingPhoto(false);
+    }
   };
 
   const stickerLimitReached = draft.stickers.length >= 3;
@@ -974,6 +916,10 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
         <div className="space-y-4">
           <StepHelp activeStep={activeStep} />
           <MobileStepPreview draft={draft} preset={preset} photoUrl={photoUrl} generatedUrl={generatedUrl} />
+
+          {status && activeStep !== 3 && (
+            <p className="rounded-2xl bg-white/78 px-4 py-3 text-center text-xs font-bold leading-5 text-[#8a6266]" aria-live="polite">{status}</p>
+          )}
 
           {activeStep === 0 && (
             <div className="grid gap-3">
@@ -1006,16 +952,22 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
           {activeStep === 1 && (
             <div className="space-y-4">
               <label className="block cursor-pointer rounded-[1.5rem] border border-white bg-white/70 p-3 shadow-sm transition hover:bg-white">
-                <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Foto del día</span>
+                <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Foto nuestra</span>
                 <span className="mt-2 grid min-h-48 place-items-center overflow-hidden rounded-[1.2rem] border border-dashed border-[#e7bebb] bg-[#fff8f3] text-center">
-                  {photoUrl ? (
+                  {processingPhoto ? (
+                    <span className="px-5">
+                      <SparkleIcon className="sparkle mx-auto h-8 w-8 text-[#d85f65]" />
+                      <span className="mt-3 block text-base font-black text-[#503237]">Sacando fondo...</span>
+                      <span className="mt-2 block text-xs font-semibold leading-5 text-[#8c7174]">Esto puede tardar unos segundos la primera vez.</span>
+                    </span>
+                  ) : photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={photoUrl} alt="Foto elegida para la postal" className="h-full max-h-64 w-full object-cover" />
+                    <img src={photoUrl} alt="Foto recortada para la postal" className="h-full max-h-64 w-full object-contain drop-shadow-[0_12px_18px_rgba(68,42,48,0.28)]" />
                   ) : (
                     <span className="px-5">
                       <SparkleIcon className="mx-auto h-8 w-8 text-[#d85f65]" />
-                      <span className="mt-3 block text-base font-black text-[#503237]">Elegir foto o sacarla ahora</span>
-                      <span className="mt-2 block text-xs font-semibold leading-5 text-[#8c7174]">También podés seguir sin foto y usar el fondo ilustrado.</span>
+                      <span className="mt-3 block text-base font-black text-[#503237]">Subir foto de ustedes</span>
+                      <span className="mt-2 block text-xs font-semibold leading-5 text-[#8c7174]">La app les saca el fondo y los pone sobre el paisaje elegido.</span>
                     </span>
                   )}
                 </span>
@@ -1023,14 +975,15 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                   type="file"
                   accept="image/*"
                   className="sr-only"
-                  onChange={(event) => choosePhoto(event.target.files?.[0])}
+                  disabled={processingPhoto}
+                  onChange={(event) => void choosePhoto(event.target.files?.[0])}
                 />
               </label>
 
               {photoName && (
                 <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-white/70 px-4 py-3">
                   <p className="min-w-0 truncate text-xs font-bold text-[#76585c]">{photoName}</p>
-                  <button type="button" onClick={() => choosePhoto()} className="shrink-0 rounded-full bg-[#f2ddd8] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#9e525b]">
+                  <button type="button" onClick={() => void choosePhoto()} className="shrink-0 rounded-full bg-[#f2ddd8] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#9e525b]">
                     Sacar
                   </button>
                 </div>
@@ -1153,7 +1106,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                   <button
                     type="button"
                     onClick={generated ? shareImage : createImage}
-                    disabled={busy}
+                    disabled={busy || processingPhoto}
                     className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#d85f65] px-5 py-3 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-70"
                   >
                     {generated ? <HeartIcon className="h-4 w-4" /> : <SparkleIcon className="h-4 w-4" />}
@@ -1200,7 +1153,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
               <button
                 type="button"
                 onClick={goBack}
-                disabled={activeStep === 0 || busy}
+                disabled={activeStep === 0 || busy || processingPhoto}
                 className="min-h-12 rounded-2xl border border-[#efd1cb] bg-white/86 px-4 text-sm font-black text-[#68484c] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
               >
                 Atrás
@@ -1209,7 +1162,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                 <button
                   type="button"
                   onClick={goNext}
-                  disabled={busy}
+                  disabled={busy || processingPhoto}
                   className="min-h-12 rounded-2xl bg-[#d85f65] px-5 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:cursor-wait disabled:opacity-70"
                 >
                   Siguiente
@@ -1218,7 +1171,7 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                 <button
                   type="button"
                   onClick={generated ? shareImage : createImage}
-                  disabled={busy}
+                  disabled={busy || processingPhoto}
                   className="min-h-12 rounded-2xl bg-[#d85f65] px-5 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:cursor-wait disabled:opacity-70"
                 >
                   {busy ? "Preparando..." : generated ? "Compartir JPG" : "Generar JPG"}
