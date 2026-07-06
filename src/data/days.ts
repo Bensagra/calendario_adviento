@@ -244,7 +244,19 @@ export const days: CalendarDay[] = [
     title: "Un mensaje de Benyu del futuro",
     subtitle: "Enviado desde el día en que ya volviste",
     type: "text",
-    text: "Hola, Danu. Te escribo desde el futuro. Ya volviste, ya te abracé y sí: la espera valió la pena.",
+    text: `Hola, Danu.
+
+Vengo del futuro. Hoy es 17 de julio, al mediodía, y estamos abrazadotes. Muy fuerte. Ese abrazo que tanto esperamos, ese que parece detener el tiempo antes de que te vayas a Iona.
+
+Vos estás durmiendo una siestota, y yo estoy acá, mirándote descansar como mi bella durmiente. No puedo evitar sonreír mientras te miro, porque el reencuentro fue hermoso. Te vi salir por esa puerta, nos miramos, y apareció esa sonrisa que siempre nos conecta, esa que no necesita palabras para decirlo todo.
+
+Y entre besotes y abrazos, volviste a mis brazos. A mi cuidado. A mi protección. Pero esta vez con algo distinto: los dos crecimos. Los dos mejoramos. Los dos cambiamos. Y aun así, seguimos encontrándonos en el mismo lugar: en este amor que vuelve a sentirse nuevo, pero con la fuerza de todo lo que ya vivimos.
+
+Hoy siento que estamos reviviendo nuestra relación, dándonos un nuevo comienzo, una nueva oportunidad para disfrutarnos, para elegirnos mejor, para abrazarnos más fuerte y para seguir construyendo esto que tanto amo.
+
+De acá para siempre.
+
+Te amo mucho, mi Danucha.`,
     unlockDate: "2026-07-06",
     unlockGame: {
       type: "timeMachine",
