@@ -13,6 +13,7 @@ interface PostcardPreset {
   id: string;
   label: string;
   eyebrow: string;
+  description: string;
   colors: [string, string, string];
   accent: string;
   ink: string;
@@ -36,41 +37,46 @@ const presets: PostcardPreset[] = [
   {
     id: "jerusalem",
     label: "Jerusalem dorada",
-    eyebrow: "luz antigua",
-    colors: ["#f5c179", "#7d72bd", "#27476f"],
-    accent: "#d85f65",
+    eyebrow: "piedra, sol y magia",
+    description: "Una postal cálida, como luz de tarde sobre la ciudad.",
+    colors: ["#f5bd66", "#8f6fae", "#24476e"],
+    accent: "#c85260",
     ink: "#432c31",
   },
   {
     id: "desert",
     label: "Desierto suave",
-    eyebrow: "calma de viaje",
-    colors: ["#c98352", "#f2c88f", "#557f7d"],
-    accent: "#b65a46",
+    eyebrow: "arena, calma y aventura",
+    description: "Para un día de ruta, paisaje abierto o momento tranquilo.",
+    colors: ["#be7347", "#f0c987", "#4c827b"],
+    accent: "#aa5548",
     ink: "#4a3027",
   },
   {
     id: "telaviv",
     label: "Mar de Tel Aviv",
-    eyebrow: "aire libre",
-    colors: ["#2f8fbe", "#f7c66a", "#fff2df"],
-    accent: "#177d93",
+    eyebrow: "agua, aire y sol",
+    description: "Más fresca, perfecta para foto linda o día con energía.",
+    colors: ["#2685b5", "#f3bd61", "#fff1d7"],
+    accent: "#147d94",
     ink: "#213843",
   },
   {
     id: "shabbat",
     label: "Noche de Shabat",
     eyebrow: "velitas lejos",
-    colors: ["#1f315f", "#8b527f", "#ffd39f"],
+    description: "Oscura, íntima y especial para un mensaje más tierno.",
+    colors: ["#182b58", "#845278", "#ffd19b"],
     accent: "#d98c7a",
     ink: "#fdf1e6",
   },
   {
     id: "camino",
     label: "Camino nuevo",
-    eyebrow: "modo aventura",
-    colors: ["#c95d68", "#f0a36f", "#6c9b8d"],
-    accent: "#b14252",
+    eyebrow: "pasitos de viaje",
+    description: "Para contar algo que pasó, una anécdota o un mini logro.",
+    colors: ["#c95261", "#eca067", "#5e9888"],
+    accent: "#ad4050",
     ink: "#3f3032",
   },
 ];
@@ -545,40 +551,216 @@ function openWhatsApp(text: string) {
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
 }
 
-function PostcardPreview({ draft, preset, photoUrl }: { draft: PostcardDraft; preset: PostcardPreset; photoUrl: string | null }) {
+const steps = [
+  {
+    title: "Fondo",
+    shortTitle: "Fondo",
+    eyebrow: "Paso 1 de 4",
+    helper: "Elegí el clima visual de la postal. Si no suma foto después, este fondo queda como imagen principal.",
+  },
+  {
+    title: "Momento",
+    shortTitle: "Foto",
+    eyebrow: "Paso 2 de 4",
+    helper: "Sumá una foto del día o dejá el fondo ilustrado. Después completá desde dónde llega la postal.",
+  },
+  {
+    title: "Mensaje",
+    shortTitle: "Texto",
+    eyebrow: "Paso 3 de 4",
+    helper: "Escribí algo cortito y elegí hasta tres stickers. Esto también viaja en el texto de WhatsApp.",
+  },
+  {
+    title: "Enviar",
+    shortTitle: "Enviar",
+    eyebrow: "Paso 4 de 4",
+    helper: "Generá el JPG y mandalo por WhatsApp. Si el celular no adjunta automático, descargalo y mandalo desde el chat.",
+  },
+] as const;
+
+type StepIndex = 0 | 1 | 2 | 3;
+
+const messageIdeas = [
+  "Hoy pensé en vos cuando...",
+  "Te mando este pedacito de mi día porque...",
+  "Si estuvieras acá, te mostraría...",
+  "El mejor momento de hoy fue...",
+];
+
+function MiniScenery({ preset, photoUrl, compact = false }: { preset: PostcardPreset; photoUrl: string | null; compact?: boolean }) {
   const backgroundStyle: CSSProperties = {
-    background: `linear-gradient(135deg, ${preset.colors[0]}, ${preset.colors[1]} 52%, ${preset.colors[2]})`,
+    background:
+      `radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.62), transparent 16%), ` +
+      `linear-gradient(135deg, ${preset.colors[0]}, ${preset.colors[1]} 52%, ${preset.colors[2]})`,
   };
 
+  if (photoUrl) {
+    return (
+      // Native img keeps user-picked local files simple and avoids Next image optimization.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={photoUrl} alt="Foto elegida para la postal" className="h-full w-full object-cover" />
+    );
+  }
+
   return (
-    <div className="mx-auto w-full max-w-[340px]">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[1.75rem] border border-white/90 bg-white p-3 shadow-[0_18px_45px_rgba(86,45,50,0.16)]">
-        <div className="relative h-full overflow-hidden rounded-[1.25rem]" style={backgroundStyle}>
-          {photoUrl ? (
-            // Native img keeps user-picked local files simple and avoids Next image optimization.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={photoUrl} alt="Foto elegida para la postal" className="h-[52%] w-full object-cover" />
-          ) : (
-            <div className="relative h-[52%] overflow-hidden">
-              <span className="absolute right-8 top-8 h-16 w-16 rounded-full bg-white/70" />
-              <span className="absolute bottom-8 left-[-12%] h-24 w-[72%] rounded-[100%] bg-white/36" />
-              <span className="absolute bottom-3 right-[-8%] h-28 w-[78%] rounded-[100%] bg-black/12" />
-              <SparkleIcon className="sparkle absolute left-10 top-12 h-5 w-5 text-white/80" />
+    <div className="relative h-full w-full overflow-hidden" style={backgroundStyle}>
+      <span className="absolute inset-0 bg-[linear-gradient(110deg,rgba(255,255,255,0.18),transparent_34%,rgba(0,0,0,0.12))]" />
+
+      {preset.id === "telaviv" && (
+        <>
+          <span className={`${compact ? "h-12 w-12" : "h-20 w-20"} absolute right-[14%] top-[13%] rounded-full bg-white/75 shadow-[0_0_24px_rgba(255,255,255,0.52)]`} />
+          <span className="absolute bottom-[22%] left-[-10%] h-[18%] w-[122%] rounded-[100%] border-t-[10px] border-white/58" />
+          <span className="absolute bottom-[12%] left-[-14%] h-[20%] w-[128%] rounded-[100%] border-t-[11px] border-[#1f6988]/32" />
+          <span className="absolute bottom-[3%] left-[-8%] h-[20%] w-[118%] rounded-[100%] border-t-[10px] border-white/48" />
+        </>
+      )}
+
+      {preset.id === "desert" && (
+        <>
+          <span className="absolute bottom-[-10%] left-[-18%] h-[38%] w-[88%] rounded-[100%] bg-[#fff0ce]/70" />
+          <span className="absolute bottom-[-6%] right-[-16%] h-[42%] w-[92%] rounded-[100%] bg-[#8d5d46]/30" />
+          <span className="absolute bottom-[8%] left-[18%] h-[30%] w-[96%] rounded-[100%] bg-[#49746e]/24" />
+          <span className="absolute left-[16%] top-[20%] h-14 w-14 rounded-full bg-[#fff2cd]/75" />
+        </>
+      )}
+
+      {preset.id === "shabbat" && (
+        <>
+          {Array.from({ length: compact ? 10 : 18 }, (_, index) => (
+            <span
+              key={index}
+              className="absolute h-1.5 w-1.5 rounded-full bg-[#ffe3b7]/80"
+              style={{ left: `${10 + ((index * 23) % 78)}%`, top: `${10 + ((index * 17) % 42)}%` }}
+            />
+          ))}
+          <span className="absolute bottom-[14%] left-[32%] h-[30%] w-[8%] rounded-t-full bg-white/78" />
+          <span className="absolute bottom-[14%] left-[57%] h-[30%] w-[8%] rounded-t-full bg-white/78" />
+          <span className="absolute bottom-[43%] left-[31%] h-[12%] w-[10%] rounded-[100%] bg-[#ffd48f]" />
+          <span className="absolute bottom-[43%] left-[56%] h-[12%] w-[10%] rounded-[100%] bg-[#ffd48f]" />
+        </>
+      )}
+
+      {preset.id === "camino" && (
+        <>
+          <span className="absolute bottom-[-8%] left-[-20%] h-[42%] w-[84%] rounded-[100%] bg-[#325e56]/28" />
+          <span className="absolute bottom-[-12%] right-[-20%] h-[45%] w-[88%] rounded-[100%] bg-[#fff0c9]/38" />
+          <span className="absolute bottom-[-4%] left-[42%] h-[86%] w-[24%] rotate-[12deg] rounded-t-[100%] bg-[#fff7e4]/58" />
+          <span className="absolute left-[18%] top-[17%] h-10 w-24 rounded-full bg-white/38" />
+        </>
+      )}
+
+      {preset.id === "jerusalem" && (
+        <>
+          <span className="absolute left-[10%] top-[24%] h-[18%] w-[18%] rounded-t-full bg-[#fff0ce]/75" />
+          <span className="absolute bottom-[14%] left-[8%] h-[34%] w-[16%] rounded-t-2xl bg-[#fff7dd]/58" />
+          <span className="absolute bottom-[14%] left-[26%] h-[42%] w-[15%] rounded-t-2xl bg-[#fff7dd]/45" />
+          <span className="absolute bottom-[14%] left-[44%] h-[30%] w-[17%] rounded-t-full bg-[#fff7dd]/66" />
+          <span className="absolute bottom-[14%] left-[64%] h-[38%] w-[16%] rounded-t-2xl bg-[#fff7dd]/52" />
+          <span className="absolute bottom-[14%] right-[5%] h-[28%] w-[14%] rounded-t-2xl bg-[#fff7dd]/44" />
+          <span className="absolute bottom-[9%] left-0 h-[11%] w-full bg-[#3a3052]/22" />
+        </>
+      )}
+    </div>
+  );
+}
+
+function PostcardPreview({ draft, preset, photoUrl, generatedUrl }: { draft: PostcardDraft; preset: PostcardPreset; photoUrl: string | null; generatedUrl?: string }) {
+  return (
+    <div className="mx-auto w-full max-w-[265px] sm:max-w-[330px]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[1.75rem] border border-white/95 bg-white p-2.5 shadow-[0_18px_45px_rgba(86,45,50,0.16)] sm:p-3">
+        {generatedUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={generatedUrl} alt="Postal generada en JPG" className="h-full w-full rounded-[1.25rem] object-cover" />
+        ) : (
+          <div className="relative h-full overflow-hidden rounded-[1.25rem] bg-white">
+            <div className="h-[50%] overflow-hidden">
+              <MiniScenery preset={preset} photoUrl={photoUrl} />
             </div>
-          )}
-          <div className="absolute inset-x-4 bottom-4 rounded-[1.1rem] bg-white/90 p-4 shadow-lg backdrop-blur-sm">
-            <p className="text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: preset.accent }}>{preset.eyebrow}</p>
-            <p className="font-display mt-1 text-2xl font-semibold leading-none text-[#503237]">Postal para Benyu</p>
-            <p className="mt-2 text-xs font-bold text-[#8b686c]">{draft.place ? `Desde ${draft.place}` : "Desde Israel"} · {draft.mood}</p>
-            <p className="mt-3 line-clamp-3 text-sm font-semibold leading-5 text-[#60454a]">{draft.message || "Hoy pensé en vos."}</p>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {draft.stickers.map((sticker) => (
-                <span key={sticker} className="rounded-full bg-[#f6ded9] px-2.5 py-1 text-[10px] font-black text-[#a74751]">{sticker}</span>
-              ))}
+            <div className="absolute inset-x-3 bottom-3 rounded-[1.1rem] bg-white/92 p-3 shadow-lg backdrop-blur-sm sm:inset-x-4 sm:bottom-4 sm:p-4">
+              <p className="text-[8px] font-black uppercase tracking-[0.16em] sm:text-[9px]" style={{ color: preset.accent }}>{preset.eyebrow}</p>
+              <p className="font-display mt-1 text-[1.55rem] font-semibold leading-none text-[#503237] sm:text-2xl">Postal para Benyu</p>
+              <p className="mt-2 text-[11px] font-bold text-[#8b686c] sm:text-xs">{draft.place ? `Desde ${draft.place}` : "Desde Israel"} · {draft.mood}</p>
+              <p className="mt-3 line-clamp-3 text-xs font-semibold leading-5 text-[#60454a] sm:text-sm">{draft.message || "Hoy pensé en vos."}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {draft.stickers.map((sticker) => (
+                  <span key={sticker} className="rounded-full bg-[#f6ded9] px-2 py-1 text-[9px] font-black text-[#a74751] sm:px-2.5 sm:text-[10px]">{sticker}</span>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+function StepIndicator({ activeStep, onStepSelect }: { activeStep: StepIndex; onStepSelect: (step: StepIndex) => void }) {
+  return (
+    <div className="mt-5 grid grid-cols-4 gap-1.5 rounded-2xl bg-white/62 p-1.5">
+      {steps.map((step, index) => {
+        const selected = index === activeStep;
+        return (
+          <button
+            key={step.title}
+            type="button"
+            aria-current={selected ? "step" : undefined}
+            onClick={() => onStepSelect(index as StepIndex)}
+            className={`min-h-12 rounded-xl px-1.5 text-center transition ${
+              selected ? "bg-[#d85f65] text-white shadow-sm" : "text-[#8b686c] hover:bg-white/80"
+            }`}
+          >
+            <span className="block text-[10px] font-black">{index + 1}</span>
+            <span className="block text-[10px] font-extrabold sm:text-xs">{step.shortTitle}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MobileStepPreview({ draft, preset, photoUrl, generatedUrl }: { draft: PostcardDraft; preset: PostcardPreset; photoUrl: string | null; generatedUrl?: string }) {
+  return (
+    <div className="rounded-[1.75rem] border border-white bg-white/72 p-3 shadow-sm lg:hidden">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Vista previa</p>
+        <span className="rounded-full bg-[#f3ded9] px-3 py-1 text-[10px] font-black text-[#a74751]">{generatedUrl ? "JPG listo" : "En vivo"}</span>
+      </div>
+      <div className="mt-3">
+        <PostcardPreview draft={draft} preset={preset} photoUrl={photoUrl} generatedUrl={generatedUrl} />
+      </div>
+    </div>
+  );
+}
+
+function StepHelp({ activeStep }: { activeStep: StepIndex }) {
+  const step = steps[activeStep];
+  return (
+    <div className="rounded-[1.5rem] border border-white bg-white/62 p-4">
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#c35b63]">{step.eyebrow}</p>
+      <h4 className="font-display mt-1 text-3xl font-semibold leading-none text-[#503237]">{step.title}</h4>
+      <p className="mt-3 text-sm font-semibold leading-6 text-[#76585c]">{step.helper}</p>
+    </div>
+  );
+}
+
+function SendInstructions() {
+  return (
+    <div className="rounded-[1.5rem] border border-[#f1d5cf] bg-white/82 p-4">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Cómo mandarla</p>
+      <ol className="mt-3 space-y-3 text-sm font-semibold leading-6 text-[#62484c]">
+        <li className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">1</span>
+          <span>Tocá <span className="font-black">Generar JPG</span>. La app arma la postal como imagen.</span>
+        </li>
+        <li className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">2</span>
+          <span>Tocá <span className="font-black">Compartir JPG</span>, elegí WhatsApp y buscame a mí.</span>
+        </li>
+        <li className="flex gap-3">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d85f65] text-xs font-black text-white">3</span>
+          <span>Mandá la foto. Si WhatsApp no pega el texto solo, usá <span className="font-black">Copiar texto</span> y pegalo en el chat.</span>
+        </li>
+      </ol>
     </div>
   );
 }
@@ -588,16 +770,24 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
   const defaultDraft = useMemo(() => getDefaultDraft(config), [config]);
   const storageKey = useMemo(() => `day-${day}-postcard-draft`, [day]);
   const [draft, setDraft] = useState<PostcardDraft>(defaultDraft);
+  const [activeStep, setActiveStep] = useState<StepIndex>(0);
   const [ready, setReady] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoName, setPhotoName] = useState("");
   const [generated, setGenerated] = useState<GeneratedPostcard | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
+  const rootRef = useRef<HTMLElement>(null);
   const photoUrlRef = useRef<string | null>(null);
   const generatedUrlRef = useRef<string | null>(null);
 
   const preset = presets.find((item) => item.id === draft.presetId) ?? presets[0];
+  const generatedUrl = generated?.url;
+  const shellBackground: CSSProperties = {
+    background:
+      `linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,250,246,0.9)), ` +
+      `linear-gradient(135deg, ${preset.colors[0]}, ${preset.colors[1]}, ${preset.colors[2]})`,
+  };
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -658,6 +848,19 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
     setGenerated({ file, url });
   };
 
+  const goToStep = (step: StepIndex) => {
+    setActiveStep(step);
+    window.setTimeout(() => rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" }), 0);
+  };
+
+  const goNext = () => {
+    if (activeStep < 3) goToStep((activeStep + 1) as StepIndex);
+  };
+
+  const goBack = () => {
+    if (activeStep > 0) goToStep((activeStep - 1) as StepIndex);
+  };
+
   const createImage = async () => {
     setBusy(true);
     setStatus("Generando postal...");
@@ -678,6 +881,15 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
     const place = draft.place.trim() ? `\nDesde ${draft.place.trim()}.` : "";
     const message = draft.message.trim() ? `\n\n${draft.message.trim()}` : "";
     return `${config.shareText}${place}${message}`;
+  };
+
+  const copyShareText = async () => {
+    try {
+      await navigator.clipboard.writeText(buildShareText());
+      setStatus("Texto copiado. Pegalo en WhatsApp junto a la postal.");
+    } catch {
+      setStatus("No pude copiarlo automáticamente. Podés seleccionar el texto y copiarlo.");
+    }
   };
 
   const shareImage = async () => {
@@ -736,28 +948,35 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
     photoUrlRef.current = nextUrl;
     setPhotoUrl(nextUrl);
     setPhotoName(file.name);
+    setStatus("Foto lista para la postal.");
   };
 
   const stickerLimitReached = draft.stickers.length >= 3;
+  const shareText = buildShareText();
 
   return (
-    <section className="overflow-hidden rounded-[2rem] border border-white bg-gradient-to-br from-white/95 via-[#fff8f0] to-[#f9dfda] p-4 shadow-[0_18px_55px_rgba(103,54,59,0.1)] sm:p-7">
-      <div className="flex items-start gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#d85f65] text-white shadow-[0_9px_22px_rgba(216,95,101,0.28)]">
-          <HeartIcon className="heartbeat h-6 w-6" />
-        </span>
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#c35b63]">Correo urgente para Benyu</p>
-          <h3 className="font-display mt-1 text-3xl font-semibold leading-none text-[#503237]">Tu postal viva</h3>
-          <p className="mt-3 text-sm font-semibold leading-6 text-[#76585c]">{config.prompt}</p>
+    <section ref={rootRef} className="overflow-hidden rounded-[2rem] border border-white p-3 shadow-[0_18px_55px_rgba(103,54,59,0.1)] sm:p-5" style={shellBackground}>
+      <div className="rounded-[1.75rem] border border-white/82 bg-white/64 p-4 shadow-sm backdrop-blur-md sm:p-5">
+        <div className="flex items-start gap-3">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#d85f65] text-white shadow-[0_9px_22px_rgba(216,95,101,0.28)]">
+            <HeartIcon className="heartbeat h-6 w-6" />
+          </span>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#c35b63]">Correo urgente para Benyu</p>
+            <h3 className="font-display mt-1 text-3xl font-semibold leading-none text-[#503237] sm:text-4xl">Tu postal viva</h3>
+            <p className="mt-3 text-sm font-semibold leading-6 text-[#76585c]">{config.prompt}</p>
+          </div>
         </div>
+        <StepIndicator activeStep={activeStep} onStepSelect={goToStep} />
       </div>
 
-      <div className="mt-7 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="space-y-6">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Estilo</p>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_350px] lg:gap-6">
+        <div className="space-y-4">
+          <StepHelp activeStep={activeStep} />
+          <MobileStepPreview draft={draft} preset={preset} photoUrl={photoUrl} generatedUrl={generatedUrl} />
+
+          {activeStep === 0 && (
+            <div className="grid gap-3">
               {presets.map((item) => {
                 const selected = item.id === draft.presetId;
                 return (
@@ -766,102 +985,40 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                     type="button"
                     aria-pressed={selected}
                     onClick={() => updateDraft({ presetId: item.id })}
-                    className={`flex min-h-16 items-center gap-3 rounded-2xl border px-3 py-2 text-left transition ${
-                      selected ? "border-[#d85f65] bg-white shadow-sm" : "border-white/80 bg-white/62 hover:bg-white"
+                    className={`grid min-h-28 grid-cols-[92px_minmax(0,1fr)] items-stretch gap-3 rounded-[1.35rem] border p-2 text-left transition active:scale-[0.99] sm:grid-cols-[120px_minmax(0,1fr)] ${
+                      selected ? "border-[#d85f65] bg-white shadow-[0_10px_26px_rgba(168,65,76,0.13)]" : "border-white/80 bg-white/62 hover:bg-white"
                     }`}
                   >
-                    <span className="h-9 w-9 shrink-0 rounded-xl shadow-inner" style={{ background: `linear-gradient(135deg, ${item.colors[0]}, ${item.colors[1]}, ${item.colors[2]})` }} />
-                    <span>
-                      <span className="block text-sm font-extrabold text-[#503237]">{item.label}</span>
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-[#a16d72]">{item.eyebrow}</span>
+                    <span className="overflow-hidden rounded-[1rem]">
+                      <MiniScenery preset={item} photoUrl={null} compact />
+                    </span>
+                    <span className="flex min-w-0 flex-col justify-center pr-1">
+                      <span className="block text-base font-extrabold text-[#503237]">{item.label}</span>
+                      <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: item.accent }}>{item.eyebrow}</span>
+                      <span className="mt-2 block text-xs font-semibold leading-5 text-[#8c7174]">{item.description}</span>
                     </span>
                   </button>
                 );
               })}
             </div>
-          </div>
+          )}
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Estoy en</span>
-              <input
-                value={draft.place}
-                onChange={(event) => updateDraft({ place: event.target.value.slice(0, 42) })}
-                maxLength={42}
-                className="mt-2 w-full rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3 text-sm font-bold text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
-              />
-            </label>
-
-            <label className="block">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Mood de hoy</span>
-              <select
-                value={draft.mood}
-                onChange={(event) => updateDraft({ mood: event.target.value })}
-                className="mt-2 w-full rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3 text-sm font-bold text-[#503237] outline-none transition focus:border-[#d85f65] focus:bg-white"
-              >
-                {moods.map((mood) => (
-                  <option key={mood} value={mood}>{mood}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div>
-            <div className="flex items-end justify-between gap-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Stickers</p>
-              <p className="text-[10px] font-bold text-[#a16d72]">{draft.stickers.length}/3</p>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {stickerOptions.map((sticker) => {
-                const selected = draft.stickers.includes(sticker);
-                const disabled = !selected && stickerLimitReached;
-                return (
-                  <button
-                    key={sticker}
-                    type="button"
-                    aria-pressed={selected}
-                    disabled={disabled}
-                    onClick={() => toggleSticker(sticker)}
-                    className={`rounded-full border px-3 py-2 text-xs font-extrabold transition ${
-                      selected
-                        ? "border-[#d85f65] bg-[#d85f65] text-white shadow-sm"
-                        : "border-white bg-white/78 text-[#68484c] hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
-                    }`}
-                  >
-                    {sticker}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <label className="block">
-            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Mensaje</span>
-            <textarea
-              value={draft.message}
-              onChange={(event) => updateDraft({ message: event.target.value.slice(0, 170) })}
-              maxLength={170}
-              rows={5}
-              className="mt-2 w-full resize-none rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3 text-sm font-semibold leading-6 text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
-            />
-            <span className="mt-1 block text-right text-[10px] font-bold text-[#a16d72]">{draft.message.length}/170</span>
-          </label>
-
-          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
-            <label className="block">
-              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Firma</span>
-              <input
-                value={draft.signature}
-                onChange={(event) => updateDraft({ signature: event.target.value.slice(0, 28) })}
-                maxLength={28}
-                className="mt-2 w-full rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3 text-sm font-bold text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
-              />
-            </label>
-
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Foto</p>
-              <label className="mt-2 inline-flex min-h-12 cursor-pointer items-center justify-center rounded-2xl border border-[#efd1cb] bg-white/82 px-4 text-sm font-extrabold text-[#68484c] transition hover:bg-white">
-                Elegir foto
+          {activeStep === 1 && (
+            <div className="space-y-4">
+              <label className="block cursor-pointer rounded-[1.5rem] border border-white bg-white/70 p-3 shadow-sm transition hover:bg-white">
+                <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Foto del día</span>
+                <span className="mt-2 grid min-h-48 place-items-center overflow-hidden rounded-[1.2rem] border border-dashed border-[#e7bebb] bg-[#fff8f3] text-center">
+                  {photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={photoUrl} alt="Foto elegida para la postal" className="h-full max-h-64 w-full object-cover" />
+                  ) : (
+                    <span className="px-5">
+                      <SparkleIcon className="mx-auto h-8 w-8 text-[#d85f65]" />
+                      <span className="mt-3 block text-base font-black text-[#503237]">Elegir foto o sacarla ahora</span>
+                      <span className="mt-2 block text-xs font-semibold leading-5 text-[#8c7174]">También podés seguir sin foto y usar el fondo ilustrado.</span>
+                    </span>
+                  )}
+                </span>
                 <input
                   type="file"
                   accept="image/*"
@@ -869,67 +1026,251 @@ export function PostcardCreator({ config: configProp, day }: PostcardCreatorProp
                   onChange={(event) => choosePhoto(event.target.files?.[0])}
                 />
               </label>
-            </div>
-          </div>
 
-          {photoName && (
-            <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-white/70 px-4 py-3">
-              <p className="min-w-0 truncate text-xs font-bold text-[#76585c]">{photoName}</p>
-              <button type="button" onClick={() => choosePhoto()} className="shrink-0 rounded-full bg-[#f2ddd8] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#9e525b]">
-                Sacar
-              </button>
+              {photoName && (
+                <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-white/70 px-4 py-3">
+                  <p className="min-w-0 truncate text-xs font-bold text-[#76585c]">{photoName}</p>
+                  <button type="button" onClick={() => choosePhoto()} className="shrink-0 rounded-full bg-[#f2ddd8] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#9e525b]">
+                    Sacar
+                  </button>
+                </div>
+              )}
+
+              <label className="block">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Desde dónde llega</span>
+                <input
+                  value={draft.place}
+                  onChange={(event) => updateDraft({ place: event.target.value.slice(0, 42) })}
+                  maxLength={42}
+                  placeholder="Ej: Jerusalem, Israel"
+                  className="mt-2 w-full rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3.5 text-base font-bold text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
+                />
+              </label>
+
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Mood de hoy</p>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  {moods.map((mood) => (
+                    <button
+                      key={mood}
+                      type="button"
+                      onClick={() => updateDraft({ mood })}
+                      className={`min-h-12 rounded-2xl border px-3 text-sm font-extrabold transition ${
+                        draft.mood === mood ? "border-[#d85f65] bg-[#d85f65] text-white" : "border-white bg-white/74 text-[#68484c] hover:bg-white"
+                      }`}
+                    >
+                      {mood}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
-        </div>
 
-        <aside className="space-y-4">
-          <PostcardPreview draft={draft} preset={preset} photoUrl={photoUrl} />
+          {activeStep === 2 && (
+            <div className="space-y-4">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Ideas rápidas</p>
+                <div className="mt-3 grid gap-2">
+                  {messageIdeas.map((idea) => (
+                    <button
+                      key={idea}
+                      type="button"
+                      onClick={() => updateDraft({ message: idea })}
+                      className="rounded-2xl border border-white bg-white/74 px-4 py-3 text-left text-sm font-bold text-[#68484c] transition hover:bg-white"
+                    >
+                      {idea}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div className="rounded-[1.75rem] border border-white bg-white/72 p-4 shadow-sm">
-            <div className="grid gap-2">
+              <label className="block">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Texto de la postal</span>
+                <textarea
+                  value={draft.message}
+                  onChange={(event) => updateDraft({ message: event.target.value.slice(0, 170) })}
+                  maxLength={170}
+                  rows={6}
+                  placeholder="Escribí algo que quieras mandarle a Benyu..."
+                  className="mt-2 w-full resize-none rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3 text-base font-semibold leading-7 text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
+                />
+                <span className="mt-1 block text-right text-[10px] font-bold text-[#a16d72]">{draft.message.length}/170</span>
+              </label>
+
+              <div>
+                <div className="flex items-end justify-between gap-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Stickers</p>
+                  <p className="text-[10px] font-bold text-[#a16d72]">{draft.stickers.length}/3</p>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {stickerOptions.map((sticker) => {
+                    const selected = draft.stickers.includes(sticker);
+                    const disabled = !selected && stickerLimitReached;
+                    return (
+                      <button
+                        key={sticker}
+                        type="button"
+                        aria-pressed={selected}
+                        disabled={disabled}
+                        onClick={() => toggleSticker(sticker)}
+                        className={`min-h-10 rounded-full border px-3 py-2 text-xs font-extrabold transition ${
+                          selected
+                            ? "border-[#d85f65] bg-[#d85f65] text-white shadow-sm"
+                            : "border-white bg-white/78 text-[#68484c] hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
+                        }`}
+                      >
+                        {sticker}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <label className="block">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Firma</span>
+                <input
+                  value={draft.signature}
+                  onChange={(event) => updateDraft({ signature: event.target.value.slice(0, 28) })}
+                  maxLength={28}
+                  className="mt-2 w-full rounded-2xl border border-[#efd1cb] bg-white/82 px-4 py-3.5 text-base font-bold text-[#503237] outline-none transition placeholder:text-[#b89b9b] focus:border-[#d85f65] focus:bg-white"
+                />
+              </label>
+            </div>
+          )}
+
+          {activeStep === 3 && (
+            <div className="space-y-4">
+              <SendInstructions />
+
+              <div className="rounded-[1.5rem] border border-white bg-white/72 p-4 shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Texto para WhatsApp</p>
+                <p className="mt-3 whitespace-pre-line rounded-2xl bg-[#fff7f2] px-4 py-3 text-sm font-semibold leading-6 text-[#62484c]">{shareText}</p>
+              </div>
+
+              <div className="rounded-[1.75rem] border border-white bg-white/78 p-4 shadow-sm">
+                <div className="grid gap-2">
+                  <button
+                    type="button"
+                    onClick={generated ? shareImage : createImage}
+                    disabled={busy}
+                    className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#d85f65] px-5 py-3 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-70"
+                  >
+                    {generated ? <HeartIcon className="h-4 w-4" /> : <SparkleIcon className="h-4 w-4" />}
+                    {busy ? "Preparando..." : generated ? "Compartir JPG" : "Generar JPG"}
+                  </button>
+
+                  {generated && (
+                    <div className="grid gap-2 sm:grid-cols-3">
+                      <button
+                        type="button"
+                        onClick={downloadImage}
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-4 py-2.5 text-xs font-black text-[#68484c] transition hover:bg-[#fff7f2]"
+                      >
+                        <CheckIcon className="h-4 w-4" />
+                        Descargar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={copyShareText}
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-4 py-2.5 text-xs font-black text-[#68484c] transition hover:bg-[#fff7f2]"
+                      >
+                        Copiar texto
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openWhatsApp(shareText)}
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-4 py-2.5 text-xs font-black text-[#68484c] transition hover:bg-[#fff7f2]"
+                      >
+                        WhatsApp
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {status && (
+                  <p className="mt-3 rounded-2xl bg-[#fff5ef] px-4 py-3 text-center text-xs font-bold leading-5 text-[#8a6266]" aria-live="polite">{status}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="sticky bottom-0 z-10 -mx-3 mt-3 border-t border-white/70 bg-[#fffaf6]/88 px-3 py-3 backdrop-blur-md sm:-mx-5 sm:px-5 lg:static lg:mx-0 lg:border-t-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-0">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-2">
               <button
                 type="button"
-                onClick={generated ? shareImage : createImage}
-                disabled={busy}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#d85f65] px-5 py-3 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-70"
+                onClick={goBack}
+                disabled={activeStep === 0 || busy}
+                className="min-h-12 rounded-2xl border border-[#efd1cb] bg-white/86 px-4 text-sm font-black text-[#68484c] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
               >
-                {generated ? <HeartIcon className="h-4 w-4" /> : <SparkleIcon className="h-4 w-4" />}
-                {busy ? "Preparando..." : generated ? "Compartir JPG" : "Generar JPG"}
+                Atrás
               </button>
+              {activeStep < 3 ? (
+                <button
+                  type="button"
+                  onClick={goNext}
+                  disabled={busy}
+                  className="min-h-12 rounded-2xl bg-[#d85f65] px-5 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:cursor-wait disabled:opacity-70"
+                >
+                  Siguiente
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={generated ? shareImage : createImage}
+                  disabled={busy}
+                  className="min-h-12 rounded-2xl bg-[#d85f65] px-5 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:-translate-y-0.5 hover:bg-[#c64f58] disabled:cursor-wait disabled:opacity-70"
+                >
+                  {busy ? "Preparando..." : generated ? "Compartir JPG" : "Generar JPG"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
 
-              {generated && (
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+        <aside className="hidden lg:block">
+          <div className="sticky top-4 space-y-4 rounded-[1.75rem] border border-white bg-white/58 p-4 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a16d72]">Vista previa</p>
+              <span className="rounded-full bg-[#f3ded9] px-3 py-1 text-[10px] font-black text-[#a74751]">{generated ? "JPG listo" : "En vivo"}</span>
+            </div>
+            <PostcardPreview draft={draft} preset={preset} photoUrl={photoUrl} generatedUrl={generatedUrl} />
+
+            {activeStep !== 3 && (
+              <div className="rounded-[1.35rem] bg-white/70 p-4">
+                <p className="text-xs font-bold leading-5 text-[#76585c]">Cuando llegues al último paso, esta preview se convierte en un JPG para mandarlo por WhatsApp.</p>
+              </div>
+            )}
+
+            {activeStep === 3 && generated && (
+              <div className="grid gap-2">
+                <button
+                  type="button"
+                  onClick={shareImage}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[#d85f65] px-4 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(216,95,101,0.25)] transition hover:bg-[#c64f58]"
+                >
+                  <HeartIcon className="h-4 w-4" />
+                  Compartir JPG
+                </button>
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={downloadImage}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-5 py-3 text-sm font-black text-[#68484c] transition hover:bg-[#fff7f2]"
+                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-4 py-2.5 text-xs font-black text-[#68484c] transition hover:bg-[#fff7f2]"
                   >
-                    <CheckIcon className="h-4 w-4" />
                     Descargar
                   </button>
                   <button
                     type="button"
-                    onClick={() => openWhatsApp(buildShareText())}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-5 py-3 text-sm font-black text-[#68484c] transition hover:bg-[#fff7f2]"
+                    onClick={copyShareText}
+                    className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#efd1cb] bg-white px-4 py-2.5 text-xs font-black text-[#68484c] transition hover:bg-[#fff7f2]"
                   >
-                    <HeartIcon className="h-4 w-4" />
-                    WhatsApp
+                    Copiar texto
                   </button>
                 </div>
-              )}
-            </div>
-
-            {status && (
-              <p className="mt-3 rounded-2xl bg-[#fff5ef] px-4 py-3 text-center text-xs font-bold leading-5 text-[#8a6266]">{status}</p>
+              </div>
             )}
           </div>
-
-          {generated && (
-            <div className="rounded-[1.75rem] border border-white bg-white/72 p-3 shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={generated.url} alt="Postal generada en JPG" className="w-full rounded-[1.25rem] shadow-sm" />
-            </div>
-          )}
         </aside>
       </div>
     </section>
