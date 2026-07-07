@@ -145,6 +145,21 @@ function getLongingColor(value: number) {
   return "#d85f65";
 }
 
+function normalizeCodePart(value: string) {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function buildBoardingCode(config: BoardingPassConfig, destination: DestinationOption, longing: number) {
+  const flightCode = normalizeCodePart(config.flight) || "DNU011";
+  const seatCode = normalizeCodePart(config.seat) || "1A";
+
+  return `${flightCode}-${destination.code}-${seatCode}-${String(longing).padStart(2, "0")}`;
+}
+
+function buildCaptainMessage(config: BoardingPassConfig, destination: DestinationOption, boardingCode: string) {
+  return `Capitán Benyu, presento mi código de embarque ${boardingCode} para recibir mi carta. Pasajera: ${config.passenger}. Destino emocional: ${destination.label}.`;
+}
+
 function StepTabs({ activeStep, onSelect }: { activeStep: StepIndex; onSelect: (step: StepIndex) => void }) {
   return (
     <div className="grid grid-cols-4 gap-1 rounded-2xl bg-white/66 p-1.5">
@@ -295,12 +310,15 @@ export function BoardingPassCheckIn({ config: configProp, day }: BoardingPassChe
   const [ready, setReady] = useState(false);
   const [issued, setIssued] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [captainStatus, setCaptainStatus] = useState("");
 
   const destination = destinations.find((item) => item.id === draft.destinationId) ?? destinations[0];
   const baggage = draft.baggageIds
     .map((id) => baggageOptions.find((item) => item.id === id))
     .filter((item): item is BaggageOption => Boolean(item));
   const canContinue = activeStep !== 1 || draft.baggageIds.length === 3;
+  const boardingCode = buildBoardingCode(config, destination, draft.longing);
+  const captainMessage = buildCaptainMessage(config, destination, boardingCode);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -326,11 +344,13 @@ export function BoardingPassCheckIn({ config: configProp, day }: BoardingPassChe
   }, [draft, issued, ready, storageKey]);
 
   const updateDraft = (patch: Partial<CheckInDraft>) => {
+    setCaptainStatus("");
     setIssued(false);
     setDraft((current) => ({ ...current, ...patch }));
   };
 
   const toggleBaggage = (id: string) => {
+    setCaptainStatus("");
     setIssued(false);
     setDraft((current) => {
       if (current.baggageIds.includes(id)) {
@@ -347,11 +367,27 @@ export function BoardingPassCheckIn({ config: configProp, day }: BoardingPassChe
 
   const confirmCheckIn = () => {
     if (scanning) return;
+    setCaptainStatus("");
     setScanning(true);
     window.setTimeout(() => {
       setScanning(false);
       setIssued(true);
     }, 1150);
+  };
+
+  const copyCaptainCode = async () => {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(boardingCode);
+      setCaptainStatus("Código copiado. Ahora entregáselo al capitán para reclamar tu carta.");
+    } catch {
+      setCaptainStatus("No pude copiarlo automático, pero podés mantener apretado el código y copiarlo.");
+    }
+  };
+
+  const sendCaptainCode = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(captainMessage)}`, "_blank", "noopener,noreferrer");
+    setCaptainStatus("WhatsApp abierto. Mandale ese código al capitán y pedí tu carta.");
   };
 
   return (
@@ -497,6 +533,40 @@ export function BoardingPassCheckIn({ config: configProp, day }: BoardingPassChe
                   <SparkleIcon className="sparkle mx-auto h-6 w-6 text-[#1f5d66]" />
                   <h4 className="font-display mt-3 text-4xl font-semibold leading-none text-[#1f5d66]">Check-in completo</h4>
                   <p className="mt-4 text-sm font-bold leading-6 text-[#4f6665]">{config.finalMessage}</p>
+
+                  <div className="mt-5 border-y border-[#b8d8cc] py-5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#1f5d66]">Entrega final</p>
+                    <h5 className="font-display mt-2 text-3xl font-semibold leading-none text-[#503237]">Presentá tu código al capitán</h5>
+                    <p className="mx-auto mt-3 max-w-xl text-sm font-bold leading-6 text-[#4f6665]">
+                      Para recibir tu carta, entregale este código de embarque al capitán Benyu. Sin este pase, la tripulación no libera correspondencia secreta.
+                    </p>
+                    <p className="mt-4 break-all rounded-2xl bg-white px-4 py-4 font-mono text-2xl font-black tracking-[0.12em] text-[#d85f65] shadow-sm sm:text-4xl">
+                      {boardingCode}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={copyCaptainCode}
+                      className="min-h-12 rounded-2xl border border-[#b8d8cc] bg-white px-5 text-sm font-black text-[#1f5d66] transition hover:-translate-y-0.5 hover:bg-[#f7fffc]"
+                    >
+                      Copiar código
+                    </button>
+                    <button
+                      type="button"
+                      onClick={sendCaptainCode}
+                      className="min-h-12 rounded-2xl bg-[#1f5d66] px-5 text-sm font-black text-white shadow-[0_10px_24px_rgba(31,93,102,0.22)] transition hover:-translate-y-0.5 hover:bg-[#174d55]"
+                    >
+                      Mandárselo al capitán
+                    </button>
+                  </div>
+
+                  {captainStatus && (
+                    <p className="mt-3 text-xs font-black leading-5 text-[#4f6665]" aria-live="polite">
+                      {captainStatus}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="rounded-[1.75rem] border border-[#f1d0c5] bg-white/78 p-5 text-center shadow-sm">
@@ -558,6 +628,11 @@ export function BoardingPassCheckIn({ config: configProp, day }: BoardingPassChe
               <p className="mt-2 text-sm font-bold leading-6 text-[#76585c]">
                 {issued ? "Ticket confirmado. El sistema ya considera que Danu está volviendo." : "Completá los pasos y confirmá el check-in para activar el boarding pass."}
               </p>
+              {issued && (
+                <p className="mt-3 rounded-2xl bg-[#eef9f6] px-3 py-2 font-mono text-sm font-black tracking-[0.08em] text-[#1f5d66]">
+                  {boardingCode}
+                </p>
+              )}
             </div>
           </div>
         </aside>
