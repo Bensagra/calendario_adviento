@@ -539,6 +539,22 @@ button {
   90%, 100% { transform: translateX(120%); }
 }
 
+.boarding-scan-line {
+  position: absolute;
+  z-index: 20;
+  inset-inline: 0;
+  top: -24%;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(31, 93, 102, 0.28), rgba(255, 255, 255, 0.78), rgba(31, 93, 102, 0.16), transparent);
+  animation: boarding-scan 1.1s ease-in-out forwards;
+  pointer-events: none;
+}
+
+@keyframes boarding-scan {
+  from { transform: translateY(0); }
+  to { transform: translateY(390%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

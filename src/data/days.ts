@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass";
 
 export interface RescueChallenge {
   id: string;
@@ -22,6 +22,16 @@ export interface PostcardConfig {
   defaultMessage: string;
   defaultSignature: string;
   shareText: string;
+}
+
+export interface BoardingPassConfig {
+  passenger: string;
+  flight: string;
+  route: string;
+  gate: string;
+  seat: string;
+  intro: string;
+  finalMessage: string;
 }
 
 export type UnlockGameType =
@@ -70,6 +80,7 @@ export interface CalendarDay {
   lockedMessage?: string;
   rescueGame?: RescueGame;
   postcard?: PostcardConfig;
+  boardingPass?: BoardingPassConfig;
 }
 
 // Editá acá fechas, textos, juegos y premios. Las URLs externas se configuran en public/content/urls.json.
@@ -291,16 +302,19 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 11,
-    title: "Planes para cuando vuelvas",
-    subtitle: "La lista ya está empezada",
-    type: "text",
-    text: "Cosas que quiero hacer cuando vuelvas:\n1. Abrazarte mucho.\n2. Escuchar todo lo del viaje.\n3. Comer algo rico juntos.\n4. Ver una peli o salir a caminar.\n5. Decirte en persona cuánto te extrañé.",
+    title: "Benyu Airlines",
+    subtitle: "Check-in a la segunda mitad del viaje",
+    type: "boardingPass",
     unlockDate: "2026-07-08",
-    unlockGame: {
-      type: "choice",
-      question: "Elegí el primer plan que hacemos cuando vuelvas.",
-      options: ["Comer algo rico", "Ver una peli", "Salir a caminar", "Abrazarnos y no hacer nada", "Sorpresa"],
-      successMessage: "Anotado. Yo acepto cualquier plan si es con vos.",
+    unlockGame: { type: "none" },
+    boardingPass: {
+      passenger: "Danu",
+      flight: "DNU-011",
+      route: "DNU -> BNY",
+      gate: "Abrazo",
+      seat: "1A",
+      intro: "Ya pasamos la mitad invisible: desde ahora cada día no te aleja del viaje, te acerca al reencuentro.",
+      finalMessage: "Check-in completo. A partir de hoy, cada día no se siente como que te fuiste: se siente como que estás volviendo. Seguí juntando historias, fotos y risas. Yo te espero en la puerta de embarque más importante: la del abrazo.",
     },
   },
   {
