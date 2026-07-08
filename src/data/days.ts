@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi";
 
 export interface RescueChallenge {
   id: string;
@@ -319,17 +319,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 12,
-    title: "Audio para dormir",
-    subtitle: "Para bajar un cambio",
-    type: "audio",
-    file: "/content/12.mp3",
+    title: "Cuidá a Benyu",
+    subtitle: "Un Tamagotchi dramático que tiene que sobrevivir hasta tu vuelta",
+    type: "benyuTamagotchi",
     unlockDate: "2026-07-09",
-    unlockGame: {
-      type: "choice",
-      question: "Antes de desbloquear esto: ¿ya estás lista para relajarte?",
-      options: ["Sí", "No, pero lo necesito", "Solo si es con tu voz"],
-      successMessage: "Entonces bajá un cambio y escuchá esto ❤️",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 13,

@@ -5,6 +5,7 @@ import type { CalendarDay } from "@/data/days";
 import { getYouTubeEmbedUrl } from "@/data/contentUrls";
 import { CouponCard } from "./CouponCard";
 import { BoardingPassCheckIn } from "./BoardingPassCheckIn";
+import { BenyuTamagotchi } from "./BenyuTamagotchi";
 import { HeartIcon } from "./icons";
 import { PostcardCreator } from "./PostcardCreator";
 import { RescueMissionGame } from "./RescueMissionGame";
@@ -58,6 +59,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (item.type === "postcard") return <PostcardCreator config={item.postcard} day={item.day} />;
 
   if (item.type === "boardingPass") return <BoardingPassCheckIn config={item.boardingPass} day={item.day} />;
+
+  if (item.type === "benyuTamagotchi") return <BenyuTamagotchi day={item.day} />;
 
   if (item.type === "text") {
     return (

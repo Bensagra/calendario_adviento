@@ -555,6 +555,74 @@ button {
   to { transform: translateY(390%); }
 }
 
+/* Día 12: Benyu Tamagotchi */
+.tamagotchi-screen {
+  background:
+    linear-gradient(rgba(80, 50, 55, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(80, 50, 55, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.92), transparent 28%),
+    linear-gradient(145deg, #eaf0eb, #c8d5cd);
+  background-size: 9px 9px, 9px 9px, auto, auto;
+}
+
+.tamagotchi-screen::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.18), transparent);
+  mix-blend-mode: soft-light;
+  animation: tamagotchi-screen-glint 4.6s ease-in-out infinite;
+}
+
+.benyu-pet-bob {
+  animation: benyu-pet-bob 3.2s ease-in-out infinite;
+  transform-origin: 50% 88%;
+}
+
+.benyu-photo-heart {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  font-size: 1.55rem;
+  filter: drop-shadow(0 5px 8px rgba(80, 50, 55, 0.28));
+  animation: benyu-photo-heart 2.1s ease-in-out infinite;
+}
+
+.benyu-photo-dead {
+  animation: benyu-photo-dead 3s ease-in-out infinite;
+}
+
+.benyu-critical-pulse {
+  animation: benyu-critical-pulse 1.25s ease-in-out infinite;
+}
+
+@keyframes tamagotchi-screen-glint {
+  0%, 100% { opacity: 0.18; transform: translateY(-20%); }
+  50% { opacity: 0.46; transform: translateY(16%); }
+}
+
+@keyframes benyu-pet-bob {
+  0%, 100% { transform: translateY(0) rotate(-0.25deg); }
+  50% { transform: translateY(-6px) rotate(0.35deg); }
+}
+
+@keyframes benyu-photo-heart {
+  0%, 100% { opacity: 0.2; transform: translateY(8px) scale(0.86) rotate(-8deg); }
+  35% { opacity: 1; transform: translateY(-7px) scale(1.08) rotate(5deg); }
+  68% { opacity: 0.72; transform: translateY(-14px) scale(0.96) rotate(-2deg); }
+}
+
+@keyframes benyu-photo-dead {
+  0%, 100% { transform: translateY(0) rotate(-0.35deg); }
+  50% { transform: translateY(4px) rotate(0.35deg); }
+}
+
+@keyframes benyu-critical-pulse {
+  0%, 100% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.75), 0 18px 38px rgba(67,44,49,0.14), 0 0 0 0 rgba(216, 95, 101, 0.35); }
+  50% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.75), 0 18px 38px rgba(67,44,49,0.16), 0 0 0 9px rgba(216, 95, 101, 0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

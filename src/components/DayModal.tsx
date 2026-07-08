@@ -17,7 +17,7 @@ interface DayModalProps {
 export function DayModal({ item, contentUrl, unlockGameCompleted, onUnlockGameComplete, onClose }: DayModalProps) {
   const shouldShowUnlockGame = Boolean(item.unlockGame && item.unlockGame.type !== "none" && !unlockGameCompleted);
   const isVideo = item.type === "video" && !shouldShowUnlockGame;
-  const modalWidth = item.type === "postcard" || item.type === "boardingPass" ? "max-w-5xl" : "max-w-2xl";
+  const modalWidth = item.type === "postcard" || item.type === "boardingPass" || item.type === "benyuTamagotchi" ? "max-w-6xl" : "max-w-2xl";
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
