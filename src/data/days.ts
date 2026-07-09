@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar";
 
 export interface RescueChallenge {
   id: string;
@@ -327,18 +327,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 13,
-    title: "Faltan pocos días",
-    subtitle: "La situación ya es grave",
-    type: "image",
-    file: "/content/13.jpg",
+    title: "Radar de señales",
+    subtitle: "Encontrá mensajitos y fotos escondidas",
+    type: "radar",
     unlockDate: "2026-07-10",
-    unlockGame: {
-      type: "quiz",
-      question: "¿Qué pensás que dice el cartel de hoy?",
-      options: ["Te extraño", "Faltan pocos días", "Volvé ya", "Estoy oficialmente insoportable"],
-      correctAnswer: "Estoy oficialmente insoportable",
-      successMessage: "Correcto. La situación ya es grave.",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 14,
