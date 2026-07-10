@@ -5,8 +5,8 @@ import { radarIntro, radarSignals, type RadarSignal } from "@/data/day13Radar";
 import { CheckIcon, HeartIcon, SparkleIcon } from "./icons";
 
 const STORAGE_VERSION = "v1";
-const DISCOVERY_RADIUS = 12;
-const MAX_SIGNAL_DISTANCE = 46;
+const DISCOVERY_RADIUS = 7;
+const MAX_SIGNAL_DISTANCE = 34;
 
 interface ScanPoint {
   x: number;
@@ -98,21 +98,54 @@ function FinalLetterCard() {
   );
 }
 
+function SignalPopup({ signal, completed, onClose }: { signal: RadarSignal; completed: boolean; onClose: () => void }) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Señal encontrada: ${signal.title}`}
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-[#3b2429]/58 p-4 backdrop-blur-sm"
+      onMouseDown={onClose}
+    >
+      <div
+        className="radar-signal-popup w-full max-w-md"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <SignalCard signal={signal} />
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-3 w-full rounded-2xl bg-[#d85f65] px-5 py-4 text-sm font-black uppercase tracking-[0.12em] text-white shadow-[0_16px_34px_rgba(216,95,101,0.32)] transition hover:bg-[#c64f58] active:scale-[0.98]"
+        >
+          {completed ? "Cerrar señal" : "Seguir buscando"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function LoveRadar({ day }: { day: number }) {
   const radarRef = useRef<HTMLDivElement>(null);
   const storageKey = useMemo(() => `day-${day}-love-radar-${STORAGE_VERSION}`, [day]);
   const [ready, setReady] = useState(false);
   const [scan, setScan] = useState<ScanPoint>({ x: 50, y: 50 });
   const [foundIds, setFoundIds] = useState<string[]>([]);
-  const [selectedId, setSelectedId] = useState(radarSignals[0]?.id ?? "");
+  const [popupSignalId, setPopupSignalId] = useState<string | null>(null);
   const [showFinalLetter, setShowFinalLetter] = useState(false);
   const foundSet = useMemo(() => new Set(foundIds), [foundIds]);
   const hiddenSignals = radarSignals.filter((signal) => !foundSet.has(signal.id));
   const foundSignals = radarSignals.filter((signal) => foundSet.has(signal.id));
-  const selectedSignal = radarSignals.find((signal) => signal.id === selectedId) ?? foundSignals.at(-1);
+  const popupSignal = radarSignals.find((signal) => signal.id === popupSignalId);
   const nearest = hiddenSignals.length > 0 ? getNearestSignal(scan, hiddenSignals) : undefined;
   const strength = getSignalStrength(scan, hiddenSignals);
   const completed = radarSignals.length > 0 && foundIds.length === radarSignals.length;
+  const radarHint = completed
+    ? "Ya no quedan señales perdidas. Igual podés tocar las encontradas para releerlas."
+    : strength >= 58
+      ? nearest?.signal.hint ?? "Estás muy cerca de una señal."
+      : strength >= 38
+        ? "La señal sube, pero todavía falta afinar el radar."
+        : "Mové el dedo despacio por el radar para buscar una señal.";
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -144,11 +177,12 @@ export function LoveRadar({ day }: { day: number }) {
 
     const nextNearest = getNearestSignal(nextScan, hiddenSignals);
     if (nextNearest && nextNearest.distance <= DISCOVERY_RADIUS) {
+      const foundSignalId = nextNearest.signal.id;
       setFoundIds((current) => {
-        if (current.includes(nextNearest.signal.id)) return current;
-        return [...current, nextNearest.signal.id];
+        if (current.includes(foundSignalId)) return current;
+        return [...current, foundSignalId];
       });
-      setSelectedId(nextNearest.signal.id);
+      setPopupSignalId(foundSignalId);
     }
   };
 
@@ -159,7 +193,7 @@ export function LoveRadar({ day }: { day: number }) {
 
   const resetRadar = () => {
     setFoundIds([]);
-    setSelectedId(radarSignals[0]?.id ?? "");
+    setPopupSignalId(null);
     setShowFinalLetter(false);
     setScan({ x: 50, y: 50 });
   };
@@ -200,7 +234,7 @@ export function LoveRadar({ day }: { day: number }) {
                 type="button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  setSelectedId(signal.id);
+                  setPopupSignalId(signal.id);
                 }}
                 className="love-radar-found absolute flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#ffd7de] text-base shadow-[0_0_18px_rgba(255,190,203,0.62)]"
                 style={{ left: `${signal.x}%`, top: `${signal.y}%`, animationDelay: `${index * -0.18}s` }}
@@ -210,7 +244,7 @@ export function LoveRadar({ day }: { day: number }) {
               </button>
             ))}
 
-            {nearest && nearest.distance < 22 ? (
+            {nearest && nearest.distance < 11 ? (
               <span
                 className="love-radar-ping absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#ffd7de]"
                 style={{ left: `${nearest.signal.x}%`, top: `${nearest.signal.y}%` }}
@@ -237,9 +271,7 @@ export function LoveRadar({ day }: { day: number }) {
               />
             </div>
             <p className="mt-3 text-xs font-bold leading-5 text-[#f3d6cf]">
-              {completed
-                ? "Ya no quedan señales perdidas. Igual podés tocar las encontradas para releerlas."
-                : nearest?.signal.hint ?? "Mové el dedo por el radar para buscar una señal."}
+              {radarHint}
             </p>
           </div>
         </div>
@@ -268,7 +300,7 @@ export function LoveRadar({ day }: { day: number }) {
                     key={signal.id}
                     type="button"
                     disabled={!found}
-                    onClick={() => setSelectedId(signal.id)}
+                    onClick={() => setPopupSignalId(signal.id)}
                     className={`rounded-2xl border px-2 py-3 text-center transition ${
                       found
                         ? "border-[#e9aaa7] bg-[#fff5f2] text-[#503237] shadow-sm"
@@ -306,17 +338,17 @@ export function LoveRadar({ day }: { day: number }) {
 
           {completed && showFinalLetter ? <FinalLetterCard /> : null}
 
-          {selectedSignal && foundSet.has(selectedSignal.id) ? (
-            <SignalCard key={selectedSignal.id} signal={selectedSignal} />
-          ) : (
-            <div className="rounded-[1.6rem] border border-dashed border-[#e7b8b2] bg-white/58 p-6 text-center shadow-sm">
-              <SparkleIcon className="mx-auto h-7 w-7 text-[#c35b63]" />
-              <h3 className="font-display mt-3 text-3xl font-semibold leading-none text-[#503237]">Todavía no abriste una señal</h3>
-              <p className="mt-3 text-sm font-semibold leading-6 text-[#806266]">
-                Pasá el dedo por el radar. Cuando estés cerca, aparece una vibración visual y se desbloquea sola.
-              </p>
-            </div>
-          )}
+          <div className="rounded-[1.6rem] border border-dashed border-[#e7b8b2] bg-white/58 p-6 text-center shadow-sm">
+            <SparkleIcon className="mx-auto h-7 w-7 text-[#c35b63]" />
+            <h3 className="font-display mt-3 text-3xl font-semibold leading-none text-[#503237]">
+              {foundIds.length > 0 ? "Las señales aparecen en popup" : "Todavía no abriste una señal"}
+            </h3>
+            <p className="mt-3 text-sm font-semibold leading-6 text-[#806266]">
+              {foundIds.length > 0
+                ? "Cada vez que encuentres una señal, se abre arriba de todo. Cerrala para seguir buscando la próxima."
+                : "Pasá el dedo despacio por el radar. Tenés que acercarte bastante para desbloquear una señal."}
+            </p>
+          </div>
 
           <button
             type="button"
@@ -327,6 +359,14 @@ export function LoveRadar({ day }: { day: number }) {
           </button>
         </div>
       </div>
+
+      {popupSignal ? (
+        <SignalPopup
+          signal={popupSignal}
+          completed={completed}
+          onClose={() => setPopupSignalId(null)}
+        />
+      ) : null}
     </section>
   );
 }
