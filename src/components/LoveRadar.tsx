@@ -79,7 +79,7 @@ function SignalCard({ signal }: { signal: RadarSignal }) {
 
 function FinalLetterCard() {
   return (
-    <article className="rounded-[1.9rem] border border-[#e9aaa7] bg-gradient-to-br from-white via-[#fff8f4] to-[#ffe9e1] p-5 shadow-[0_22px_48px_rgba(103,54,59,0.14)] sm:p-7">
+    <article className="radar-letter-paper max-h-[82vh] overflow-y-auto rounded-[1.9rem] border border-[#e9aaa7] bg-gradient-to-br from-white via-[#fff8f4] to-[#ffe9e1] p-5 shadow-[0_22px_48px_rgba(103,54,59,0.14)] sm:p-7">
       <div className="mb-4 flex items-center gap-3">
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#d85f65] text-white shadow-[0_9px_22px_rgba(216,95,101,0.24)]">
           <HeartIcon className="heartbeat h-5 w-5" />
@@ -95,6 +95,55 @@ function FinalLetterCard() {
         {radarIntro.finalLetter}
       </p>
     </article>
+  );
+}
+
+function FloatingLetterButton({ onOpen }: { onOpen: () => void }) {
+  return (
+    <div className="pointer-events-none fixed inset-x-4 bottom-5 z-[70] flex justify-center sm:bottom-8">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="radar-floating-letter pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-[1.65rem] bg-[#d85f65] px-5 py-4 text-left text-white shadow-[0_22px_50px_rgba(76,35,42,0.32)] transition hover:bg-[#c64f58] active:scale-[0.98]"
+      >
+        <span className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/18 blur-2xl" />
+        <span className="relative flex items-center gap-4">
+          <span className="radar-envelope-icon flex h-14 w-16 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-[0_10px_24px_rgba(80,50,55,0.18)]">
+            💌
+          </span>
+          <span>
+            <span className="block text-[10px] font-black uppercase tracking-[0.2em] text-[#ffe0dd]">Cartita desbloqueada</span>
+            <span className="mt-1 block text-base font-black leading-5">Abrir tu cartita pre shabat</span>
+          </span>
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function FinalLetterModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Cartita pre shabat"
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-[#3b2429]/62 p-4 backdrop-blur-sm"
+      onMouseDown={onClose}
+    >
+      <div
+        className="w-full max-w-2xl"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <FinalLetterCard />
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-3 w-full rounded-2xl bg-[#d85f65] px-5 py-4 text-sm font-black uppercase tracking-[0.12em] text-white shadow-[0_16px_34px_rgba(216,95,101,0.32)] transition hover:bg-[#c64f58] active:scale-[0.98]"
+        >
+          Cerrar cartita
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -323,20 +372,12 @@ export function LoveRadar({ day }: { day: number }) {
                   <CheckIcon className="mr-2 inline h-4 w-4" />
                   {radarIntro.completionTitle}: {radarIntro.completionMessage}
                 </p>
-                {!showFinalLetter ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowFinalLetter(true)}
-                    className="radar-letter-pop mt-4 w-full rounded-2xl bg-[#d85f65] px-5 py-4 text-sm font-black uppercase tracking-[0.12em] text-white shadow-[0_16px_34px_rgba(216,95,101,0.32)] transition hover:bg-[#c64f58] active:scale-[0.98]"
-                  >
-                    Abrir tu cartita pre shabat
-                  </button>
-                ) : null}
+                <p className="mt-2 text-xs font-bold leading-5 text-[#9a3f49]/80">
+                  Te apareció una cartita flotando. Tocala para abrirla.
+                </p>
               </div>
             ) : null}
           </div>
-
-          {completed && showFinalLetter ? <FinalLetterCard /> : null}
 
           <div className="rounded-[1.6rem] border border-dashed border-[#e7b8b2] bg-white/58 p-6 text-center shadow-sm">
             <SparkleIcon className="mx-auto h-7 w-7 text-[#c35b63]" />
@@ -366,6 +407,14 @@ export function LoveRadar({ day }: { day: number }) {
           completed={completed}
           onClose={() => setPopupSignalId(null)}
         />
+      ) : null}
+
+      {completed && !showFinalLetter && !popupSignal ? (
+        <FloatingLetterButton onOpen={() => setShowFinalLetter(true)} />
+      ) : null}
+
+      {completed && showFinalLetter ? (
+        <FinalLetterModal onClose={() => setShowFinalLetter(false)} />
       ) : null}
     </section>
   );
