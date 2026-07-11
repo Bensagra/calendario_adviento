@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery";
 
 export interface RescueChallenge {
   id: string;
@@ -335,17 +335,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 14,
-    title: "Sorpresa",
-    subtitle: "Capaz no todo está acá",
-    type: "text",
-    text: "Revisá bien. Capaz dejé algo donde menos te lo esperás. Hoy no todo está en la pantalla ❤️",
+    title: "Caso Benyu desaparecido",
+    subtitle: "Un misterio romántico para salvar a Benyu",
+    type: "mystery",
     unlockDate: "2026-07-11",
-    unlockGame: {
-      type: "choice",
-      question: "Hoy puede haber una sorpresa fuera de la pantalla. ¿Dónde mirarías primero?",
-      options: ["Mochila", "Valija", "Neceser", "Bolsillo", "Cartuchera"],
-      successMessage: "Buena búsqueda. Capaz hoy no todo está en la pantalla ❤️",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 15,

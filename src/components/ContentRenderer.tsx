@@ -6,6 +6,7 @@ import { getYouTubeEmbedUrl } from "@/data/contentUrls";
 import { CouponCard } from "./CouponCard";
 import { BoardingPassCheckIn } from "./BoardingPassCheckIn";
 import { BenyuTamagotchi } from "./BenyuTamagotchi";
+import { BenyuMystery } from "./BenyuMystery";
 import { HeartIcon } from "./icons";
 import { LoveRadar } from "./LoveRadar";
 import { PostcardCreator } from "./PostcardCreator";
@@ -64,6 +65,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (item.type === "benyuTamagotchi") return <BenyuTamagotchi day={item.day} />;
 
   if (item.type === "radar") return <LoveRadar day={item.day} />;
+
+  if (item.type === "mystery") return <BenyuMystery day={item.day} />;
 
   if (item.type === "text") {
     return (

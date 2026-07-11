@@ -29,6 +29,10 @@ Flujo clave: abrir `http://localhost:3123/`, click en la card del día (por tít
 
 - La grilla mobile necesita `grid-cols-1` explícito: con `display:grid` sin template, una fila
   con `overflow-x-auto` (max-content ancho) infla la columna implícita más allá del viewport.
-- Descargas: escuchar el evento `download` de Playwright (el builder del día 12 exporta PNG vía canvas).
-- El preview del día 12 es `position: sticky` dentro del modal: ningún ancestro intermedio
-  puede tener `overflow` distinto de `visible`.
+- Descargas: escuchar el evento `download` de Playwright cuando un componente exporta PNG vía canvas.
+- Selectores de chips de texto: usar `:text-is("palabra")` (exacto), no `:has-text` (substring).
+- Para saltar a un estado intermedio, presetear localStorage con `addInitScript` antes de `goto`.
+  Ej. día 14: clave `day-14-benyu-mystery-v2` con `{ started: true, solvedIds: [...] }`
+  (ids en `src/data/day14Mystery.ts`).
+- Ojo con reglas tipo `.card > *` que setean `position: relative`: pisan la clase `absolute`
+  de Tailwind en overlays (misma especificidad, viene después en el stylesheet).
