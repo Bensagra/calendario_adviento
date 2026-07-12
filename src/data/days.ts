@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses";
 
 export interface RescueChallenge {
   id: string;
@@ -343,17 +343,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 15,
-    title: "Algo muy nuestro",
-    subtitle: "Este es especial",
-    type: "video",
-    file: "/content/15.mp4",
+    title: "A cinco sentidos de vos",
+    subtitle: "Faltan cinco días para volver a sentirte cerquita",
+    type: "fiveSenses",
     unlockDate: "2026-07-12",
-    unlockGame: {
-      type: "freeText",
-      question: "Para desbloquear este día especial, escribí una palabra que defina estos 3 meses.",
-      placeholder: "Una palabra…",
-      successMessage: "Me gustó. Ahora abrí esto, que es especial ❤️",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 16,
