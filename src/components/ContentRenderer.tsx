@@ -13,6 +13,7 @@ import { PostcardCreator } from "./PostcardCreator";
 import { RescueMissionGame } from "./RescueMissionGame";
 import { FiveSensesReunion } from "./FiveSensesReunion";
 import { ReunionForecast } from "./ReunionForecast";
+import { HugLaboratory } from "./HugLaboratory";
 
 function MissingContent() {
   return (
@@ -73,6 +74,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (item.type === "fiveSenses") return <FiveSensesReunion />;
 
   if (item.type === "reunionForecast") return <ReunionForecast />;
+
+  if (item.type === "hugLaboratory") return <HugLaboratory />;
 
   if (item.type === "text") {
     return (

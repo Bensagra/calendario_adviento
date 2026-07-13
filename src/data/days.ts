@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast" | "hugLaboratory";
 
 export interface RescueChallenge {
   id: string;
@@ -359,18 +359,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 17,
-    title: "Cuenta regresiva",
-    subtitle: "Ya falta muy poquito",
-    type: "video",
-    file: "/content/17.mp4",
+    title: "Laboratorio del abrazo perfecto",
+    subtitle: "Faltan tres días. Hay que empezar a calibrarlo.",
+    type: "hugLaboratory",
     unlockDate: "2026-07-14",
-    unlockGame: {
-      type: "quiz",
-      question: "Falta poco. ¿Qué voy a hacer apenas te vea?",
-      options: ["Saludar normal", "Hacerme el tranquilo", "Abrazarte mucho", "Decir hola y nada más"],
-      correctAnswer: "Abrazarte mucho",
-      successMessage: "Correcto. Y probablemente no te suelte rápido.",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 18,
