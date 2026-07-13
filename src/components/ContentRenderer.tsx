@@ -12,6 +12,7 @@ import { LoveRadar } from "./LoveRadar";
 import { PostcardCreator } from "./PostcardCreator";
 import { RescueMissionGame } from "./RescueMissionGame";
 import { FiveSensesReunion } from "./FiveSensesReunion";
+import { ReunionForecast } from "./ReunionForecast";
 
 function MissingContent() {
   return (
@@ -70,6 +71,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (item.type === "mystery") return <BenyuMystery day={item.day} />;
 
   if (item.type === "fiveSenses") return <FiveSensesReunion />;
+
+  if (item.type === "reunionForecast") return <ReunionForecast />;
 
   if (item.type === "text") {
     return (

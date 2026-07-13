@@ -219,6 +219,57 @@ button {
   55%, 100% { transform: translateX(360%) skewX(-12deg); }
 }
 
+.reunion-heart {
+  display: inline-block;
+  color: #e76675;
+  animation: reunion-heart 1.8s ease-in-out infinite;
+}
+
+.reunion-wind {
+  animation: reunion-wind 2.4s ease-in-out infinite;
+}
+
+.reunion-flash {
+  animation: reunion-flash 1.4s ease-in-out infinite;
+}
+
+.reunion-plane {
+  animation: reunion-plane 3.2s ease-in-out infinite;
+}
+
+.reunion-alert-in {
+  animation: reunion-alert-in 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes reunion-heart {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.13); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.08); }
+}
+
+@keyframes reunion-wind {
+  0%, 100% { transform: translateX(-2px); opacity: 0.85; }
+  50% { transform: translateX(5px); opacity: 1; }
+}
+
+@keyframes reunion-flash {
+  0%, 72%, 100% { opacity: 1; }
+  78% { opacity: 0.25; }
+  84% { opacity: 1; }
+  90% { opacity: 0.3; }
+}
+
+@keyframes reunion-plane {
+  0%, 100% { transform: translate(-65%, -50%); }
+  50% { transform: translate(-35%, -65%); }
+}
+
+@keyframes reunion-alert-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 /* Pulso de atención: día disponible y sin abrir */
 .attention {
   animation: attention-pulse 2.2s ease-out infinite;

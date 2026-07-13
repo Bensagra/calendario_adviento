@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast";
 
 export interface RescueChallenge {
   id: string;
@@ -351,18 +351,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 16,
-    title: "10 cosas que me gustan de vos",
-    subtitle: "Aunque podría escribir cien",
-    type: "text",
-    text: "10 cosas que me gustan de vos:\n1. Tu forma de reírte.\n2. Cómo me mirás.\n3. Cómo me hacés sentir.\n4. Que con vos puedo ser yo.\n5. Tu ternura.\n6. Tus mensajes.\n7. Cómo contás las cosas.\n8. Que hacés especial lo simple.\n9. Las ganas que me dan de verte.\n10. Vos, entera.",
+    title: "Pronóstico del reencuentro",
+    subtitle: "Se acerca un frente de abrazos desde Israel",
+    type: "reunionForecast",
     unlockDate: "2026-07-13",
-    unlockGame: {
-      type: "choice",
-      question: "Antes de ver mi lista, elegí 3 cosas que pensás que me gustan de vos.",
-      options: ["Tu risa", "Tus ojos", "Tus mensajes", "Cómo me mirás", "Tu forma de ser", "Tus abrazos", "Todo"],
-      helperText: "Elegí una opción para seguir. La respuesta real era más fácil.",
-      successMessage: "La respuesta real era más fácil: todo.",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 17,
