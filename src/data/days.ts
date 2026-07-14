@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast" | "hugLaboratory";
+export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast" | "hugLaboratory" | "reunionVoucher";
 
 export interface RescueChallenge {
   id: string;
@@ -367,16 +367,11 @@ Te amo mucho, mi Danucha.`,
   },
   {
     day: 18,
-    title: "Cupón final",
-    subtitle: "Para usar juntos",
-    type: "coupon",
-    text: "Cupón válido por una tarde completa juntos. Sin apuro, sin interrupciones, con muchos abrazos.",
+    title: "Nuestros próximos tres planes",
+    subtitle: "Esta vez la agenda la armás vos.",
+    type: "reunionVoucher",
     unlockDate: "2026-07-15",
-    unlockGame: {
-      type: "scratch",
-      question: "Raspá la tarjeta para descubrir tu cupón.",
-      successMessage: "Cupón desbloqueado ❤️",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 19,

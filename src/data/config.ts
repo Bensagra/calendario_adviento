@@ -5,3 +5,7 @@ export const TEST_MODE = false;
 export const CALENDAR_START_DATE = "2026-06-28";
 export const REUNION_DATE = "2026-07-17";
 export const SPECIAL_DATE = "2026-07-04";
+
+// Número de WhatsApp de Benyu con código de país, sin +, espacios ni guiones.
+// Ejemplo Argentina: "5491123456789". Vacío abre el selector de chats de WhatsApp.
+export const WHATSAPP_RECIPIENT_PHONE = "5491155743908";

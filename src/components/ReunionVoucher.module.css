@@ -1,0 +1,418 @@
+.shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 560px;
+  border: 1px solid rgba(44, 67, 65, 0.14);
+  border-radius: 1.9rem;
+  color: #243b3a;
+  background:
+    radial-gradient(circle at 85% 5%, rgba(224, 174, 91, 0.24), transparent 29%),
+    linear-gradient(145deg, #f5efe2 0%, #fffaf0 50%, #eee4d3 100%);
+  box-shadow: 0 24px 60px rgba(52, 54, 46, 0.14);
+}
+
+.paperTexture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.95rem 1.15rem;
+  color: #f9f3e8;
+  background: #294e4c;
+  font-size: 0.51rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.liveDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  white-space: nowrap;
+}
+
+.liveDot i {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: #f3bc67;
+  animation: live-pulse 2s ease-out infinite;
+}
+
+.content { padding: 1.15rem; }
+
+.stageIn { animation: stage-in 0.48s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+.routeStrip {
+  display: grid;
+  grid-template-columns: auto minmax(70px, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(45, 78, 76, 0.13);
+  border-radius: 1rem;
+  background: rgba(255, 253, 246, 0.7);
+}
+
+.routeStrip > span:not(.routeLine) {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.routeStrip b { font-size: 0.75rem; letter-spacing: 0.12em; }
+.routeStrip small { color: #7c8580; font-size: 0.52rem; font-weight: 800; text-transform: uppercase; }
+
+.routeLine { position: relative; height: 1px; border-top: 1px dashed #87a09a; }
+
+.routeLine::before,
+.routeLine::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #64817d;
+  border-radius: 50%;
+  background: #fffaf0;
+  transform: translateY(-50%);
+}
+
+.routeLine::before { left: -2px; }
+.routeLine::after { right: -2px; }
+
+.routeLine i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 0 0.38rem;
+  color: #d46262;
+  background: #f8f1e5;
+  font-size: 0.72rem;
+  font-style: normal;
+  transform: translate(-50%, -50%);
+  animation: route-heart 2.4s ease-in-out infinite;
+}
+
+.introCopy { padding: 1.8rem 0.3rem 1.25rem; text-align: center; }
+
+.introCopy > p {
+  margin: 0;
+  color: #bd5c59;
+  font-size: 0.55rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.introCopy h3,
+.messageStage > h3 {
+  margin: 0.65rem 0 0;
+  color: #263f3d;
+  font-family: var(--font-display), serif;
+  font-size: clamp(2.55rem, 10vw, 4.1rem);
+  font-weight: 600;
+  line-height: 0.84;
+  letter-spacing: -0.04em;
+}
+
+.introCopy h3 em,
+.messageStage > h3 em { color: #d2605d; font-weight: inherit; }
+
+.introCopy > span {
+  display: block;
+  max-width: 27rem;
+  margin: 0.95rem auto 0;
+  color: #71807b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.form,
+.fields { display: grid; gap: 0.75rem; }
+
+.planField {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(47, 72, 69, 0.13);
+  border-radius: 1.15rem;
+  background: rgba(255, 253, 247, 0.86);
+  box-shadow: 0 8px 22px rgba(68, 71, 61, 0.07);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.planField:focus-within {
+  border-color: rgba(210, 96, 93, 0.58);
+  box-shadow: 0 12px 28px rgba(161, 75, 72, 0.13);
+  transform: translateY(-1px);
+}
+
+.planNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: #fff8ed;
+  background: #d2605d;
+  font-family: var(--font-display), serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 7px 16px rgba(210, 96, 93, 0.22);
+}
+
+.planInputArea { position: relative; min-width: 0; }
+.planInputArea strong { display: block; color: #3a514e; font-size: 0.61rem; font-weight: 950; text-transform: uppercase; letter-spacing: 0.12em; }
+
+.planInputArea textarea {
+  display: block;
+  width: 100%;
+  min-height: 3.1rem;
+  margin-top: 0.25rem;
+  padding: 0.15rem 2.1rem 0.15rem 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  color: #354c49;
+  background: transparent;
+  font-family: var(--font-display), serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.planInputArea textarea::placeholder { color: #a3a49c; font-family: var(--font-sans), sans-serif; font-size: 0.72rem; font-weight: 600; }
+.planInputArea > small { position: absolute; right: 0; bottom: 0; color: #a2a39c; font-size: 0.48rem; font-weight: 800; }
+
+.progress { padding: 0.15rem 0.1rem; }
+.progress > span { display: block; height: 0.35rem; overflow: hidden; border-radius: 999px; background: #dcd4c8; }
+.progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4d8581, #d2605d); transition: width 300ms ease; }
+.progress p { margin: 0.45rem 0 0; color: #7e8782; text-align: center; font-size: 0.56rem; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
+
+.primaryButton,
+.whatsAppButton,
+.copyButton {
+  width: 100%;
+  border-radius: 1rem;
+  font-weight: 950;
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.primaryButton {
+  padding: 0.95rem 1.2rem;
+  color: white;
+  background: linear-gradient(110deg, #b9484e, #df6862 54%, #c95053);
+  box-shadow: 0 11px 24px rgba(184, 72, 78, 0.25);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+}
+
+.primaryButton:disabled { cursor: not-allowed; opacity: 0.42; box-shadow: none; }
+.primaryButton:hover:not(:disabled), .whatsAppButton:hover, .copyButton:hover { transform: translateY(-2px); }
+.primaryButton span { margin-left: 0.45rem; }
+
+.messageStage { padding-top: 0.3rem; text-align: center; }
+
+.readyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #47726c;
+  font-size: 0.55rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+}
+
+.readyBadge span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  color: white;
+  background: #4d8581;
+}
+
+.readyCopy { margin: 0.85rem 0 1rem; color: #71807b; font-size: 0.7rem; font-weight: 700; }
+
+.messageCard {
+  max-width: 31rem;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #d8d8ce;
+  border-radius: 1.25rem;
+  text-align: left;
+  background: #efe9de;
+  box-shadow: 0 15px 35px rgba(58, 66, 59, 0.13);
+}
+
+.messageHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  color: white;
+  background: #245c56;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: #ac494b;
+  background: #f3d4ca;
+  font-family: var(--font-display), serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.messageHeader b,
+.messageHeader small { display: block; }
+.messageHeader b { font-size: 0.72rem; }
+.messageHeader small { margin-top: 0.08rem; color: #b8d1cd; font-size: 0.5rem; font-weight: 700; }
+.messageHeader i { color: #c5dad7; font-size: 0.75rem; font-style: normal; letter-spacing: 0.1em; }
+
+.messageCard > p {
+  position: relative;
+  margin: 0.9rem 2rem 0.4rem 0.75rem;
+  padding: 0.8rem 0.85rem;
+  border-radius: 0.3rem 0.85rem 0.85rem 0.85rem;
+  color: #2f4642;
+  background: #fffdf7;
+  box-shadow: 0 2px 7px rgba(45, 58, 52, 0.1);
+  white-space: pre-line;
+  font-size: 0.69rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.messageTime { margin: 0 0.8rem 0.75rem; color: #8b958f; text-align: right; font-size: 0.48rem; font-weight: 700; }
+.messageTime span { margin-left: 0.2rem; color: #3e9cc6; }
+
+.actions { display: grid; gap: 0.65rem; max-width: 31rem; margin: 1rem auto 0; }
+
+.whatsAppButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1rem;
+  color: white;
+  background: #20aa62;
+  box-shadow: 0 11px 24px rgba(32, 170, 98, 0.25);
+  font-size: 0.71rem;
+}
+
+.whatsAppButton svg { width: 1.25rem; height: 1.25rem; }
+
+.copyButton {
+  padding: 0.78rem 1rem;
+  border: 1px solid #cfc9bd;
+  color: #526762;
+  background: rgba(255, 253, 247, 0.76);
+  font-size: 0.61rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sendHint { max-width: 27rem; margin: 0.7rem auto 0; color: #87908b; font-size: 0.55rem; font-weight: 750; line-height: 1.45; }
+
+.loveNote {
+  position: relative;
+  max-width: 31rem;
+  margin: 1rem auto 0;
+  padding: 1rem 0.9rem 1rem 3.35rem;
+  border: 1px solid rgba(197, 86, 84, 0.14);
+  border-radius: 1.1rem;
+  color: #655d59;
+  text-align: left;
+  background: rgba(255, 249, 241, 0.76);
+}
+
+.loveNote > span {
+  position: absolute;
+  left: 0.9rem;
+  top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  color: white;
+  background: #d15b5a;
+}
+
+.loveNote p { margin: 0; font-size: 0.65rem; font-weight: 680; line-height: 1.5; }
+.loveNote strong { display: block; margin-top: 0.45rem; color: #b94f50; font-family: var(--font-display), serif; font-size: 0.83rem; }
+
+.editButton {
+  margin-top: 0.8rem;
+  padding: 0.5rem;
+  color: #6f817d;
+  font-size: 0.53rem;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+@keyframes stage-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes route-heart {
+  0%, 100% { transform: translate(-55%, -50%) scale(1); }
+  50% { transform: translate(-45%, -65%) scale(1.12); }
+}
+
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(243, 188, 103, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 7px rgba(243, 188, 103, 0); }
+}
+
+@media (min-width: 640px) {
+  .content { padding: 1.5rem; }
+  .planField { padding: 1rem; }
+  .planNumber { width: 3rem; height: 3rem; }
+  .planInputArea textarea { font-size: 1.08rem; }
+  .actions { grid-template-columns: 1.5fr 1fr; }
+  .copyButton { height: 100%; }
+  .messageStage { padding: 0.3rem 1rem 0.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stageIn,
+  .routeLine i,
+  .liveDot i { animation: none; }
+
+  .planField,
+  .primaryButton,
+  .whatsAppButton,
+  .copyButton,
+  .progress i { transition: none; }
+}

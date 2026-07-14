@@ -18,7 +18,11 @@ export function DayModal({ item, contentUrl, unlockGameCompleted, onUnlockGameCo
   const shouldShowUnlockGame = Boolean(item.unlockGame && item.unlockGame.type !== "none" && !unlockGameCompleted);
   const isVideo = item.type === "video" && !shouldShowUnlockGame;
   const isProtocol = item.type === "hugLaboratory" && !shouldShowUnlockGame;
-  const modalWidth = item.type === "postcard" || item.type === "boardingPass" || item.type === "benyuTamagotchi" || item.type === "radar" || item.type === "mystery" ? "max-w-6xl" : "max-w-2xl";
+  const modalWidth = item.type === "postcard" || item.type === "boardingPass" || item.type === "benyuTamagotchi" || item.type === "radar" || item.type === "mystery"
+    ? "max-w-6xl"
+    : item.type === "reunionVoucher"
+      ? "max-w-3xl"
+      : "max-w-2xl";
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 

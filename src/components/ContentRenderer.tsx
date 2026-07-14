@@ -14,6 +14,7 @@ import { RescueMissionGame } from "./RescueMissionGame";
 import { FiveSensesReunion } from "./FiveSensesReunion";
 import { ReunionForecast } from "./ReunionForecast";
 import { HugLaboratory } from "./HugLaboratory";
+import { ReunionVoucher } from "./ReunionVoucher";
 
 function MissingContent() {
   return (
@@ -76,6 +77,8 @@ export function ContentRenderer({ item, contentUrl }: { item: CalendarDay; conte
   if (item.type === "reunionForecast") return <ReunionForecast />;
 
   if (item.type === "hugLaboratory") return <HugLaboratory />;
+
+  if (item.type === "reunionVoucher") return <ReunionVoucher />;
 
   if (item.type === "text") {
     return (
