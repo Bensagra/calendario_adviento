@@ -1,6 +1,6 @@
 import { SPECIAL_DATE } from "./config";
 
-export type DayContentType = "video" | "image" | "audio" | "text" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast" | "hugLaboratory" | "reunionVoucher";
+export type DayContentType = "video" | "image" | "audio" | "text" | "letter" | "coupon" | "rescue" | "postcard" | "boardingPass" | "benyuTamagotchi" | "radar" | "mystery" | "fiveSenses" | "reunionForecast" | "hugLaboratory" | "reunionVoucher";
 
 export interface RescueChallenge {
   id: string;
@@ -376,17 +376,36 @@ Te amo mucho, mi Danucha.`,
   {
     day: 19,
     title: "Mañana te veo",
-    subtitle: "Por fin falta casi nada",
-    type: "text",
-    text: "Mañana te veo. Después de tantos días contando cuánto faltaba, por fin falta casi nada. Me encanta que hayas vivido este viaje, pero no sabés las ganas que tengo de abrazarte y escucharte contarme todo.",
+    subtitle: "Una carta para el final de este comienzo",
+    type: "letter",
+    text: `Hola, amor de mi vida:
+
+El día que tanto esperamos está cerca: el del reencuentro, el de volver a conectarnos físicamente, volver a sentir la respiración y los latidos del otro, y darnos cuenta de que estamos hechos para estar bien pegadotes.
+
+Al mismo tiempo, se termina un viaje muy esperado por vos: tu primera vez en Israel, tu primera vez en ese hermoso país por el que tanto peleamos y al que espero algún día poder volver con vos, primero como mi novia y luego como mi esposa. Porque Israel es historia viviente. Es nuestro pueblo continuando la escritura de su historia.
+
+Tal vez no haya sido el lugar que esperabas, pero eso también es lo que hace que un lugar sea interesante: que te llame a conocerlo y que haya cosas por trabajar y mejorar. Eso es lo que hace que uno se sienta en casa.
+
+Y así me siento yo con vos. Siempre hay cosas para mejorar, como en todas las parejas, pero uno siempre vuelve a su casa, a su hogar, al lugar donde puede dormir en paz, donde se siente cómodo y donde decide pasar su vida.
+
+Este viaje que emprendimos, el de la reconstrucción de nuestra relación, creo que está llegando al final de su comienzo. Esta reconstrucción arrancó en la distancia y en una realidad poco habitual, pero creo que nos ayudó a reforzar ese sentimiento de amor por las cosas más pequeñas: por un mensaje, por una llamada que puede cambiarte el día.
+
+Y ese es el punto desde el que vamos a partir mañana: volver a encontrarnos después de extrañarnos tanto. Pero ambos cambiamos, ambos crecimos y estamos listos (al vez no del todo, pero se irá resolviendo en el camino) para afrontar un nuevo inicio en el que los dos nos sintamos cómodos y disfrutemos de nuestra relación. Y que sea eterna.
+
+Porque mi amor por vos es eterno, mi Danu. Quiero que podamos pasar hasta el último día de nuestras vidas juntitos, pegadotes, dándonos la mano cuando lo necesitemos y levantando al otro cuando lo necesite.
+
+Pero, sobre todo, quiero que entendamos por qué nos elegimos: porque nos elegimos por lo que formamos, por nuestro vínculo. Yo no me enamoré de la Dani que ve todo el mundo. Yo me enamoré de mi Danucha, de la persona más dulce y cálida que existe, la que me hace sentir MUY amado.
+
+Aunque tal vez haya veces en las que tengamos dudas, yo sé que nuestro amor es sempiterno.
+
+TE AMO, MI DANUCHA. QUIERO VERTE YA, ABRAZARTE Y COMERTE A BESOSSS.
+
+TE AMOOOO.
+
+TU BENYU.
+TUYO PARA SIEMPRE.`,
     unlockDate: "2026-07-16",
-    unlockGame: {
-      type: "quiz",
-      question: "Mañana nos vemos. ¿Qué emoción desbloqueamos hoy?",
-      options: ["Ansiedad linda", "Felicidad", "Ganas de abrazo", "Todas juntas"],
-      correctAnswer: "Todas juntas",
-      successMessage: "Sí. Todas juntas y cada vez más fuerte.",
-    },
+    unlockGame: { type: "none" },
   },
   {
     day: 20,
